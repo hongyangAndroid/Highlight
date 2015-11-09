@@ -8,6 +8,11 @@
 
 <img src="highlight2.gif" width="320px"/>
 
+横屏：
+
+<img src="highlight3.png" width="320px"/>
+
+
 ## 引入
 
 下载代码，然后：
