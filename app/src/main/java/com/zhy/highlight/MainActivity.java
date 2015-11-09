@@ -1,10 +1,14 @@
 package com.zhy.highlight;
 
+import android.graphics.Point;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import zhy.com.highlight.HighLight;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -24,10 +28,15 @@ public class MainActivity extends AppCompatActivity
             public void run()
             {
                 mHightLight = new HighLight(MainActivity.this)//
-                        .setAnchor(findViewById(R.id.id_container))//
-                        .setHighLights(R.id.id_btn_important, R.id.id_btn_amazing, R.id.id_tv_center)//
-                ;
-
+                        .anchor(findViewById(R.id.id_container))//
+                        .addHighLight(R.id.id_btn_important, R.layout.info_up, new HighLight.OnPosCallback()
+                        {
+                            @Override
+                            public Point getPos(RectF rectF)
+                            {
+                                return new Point((int) (rectF.left + rectF.width()) / 2, (int) rectF.bottom);
+                            }
+                        }).intercept(true);
 
                 mHightLight.build();
             }
@@ -35,9 +44,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     public void remove(View view)
     {
-        mHightLight.removeSelf();
+        mHightLight.remove();
     }
 
     public void add(View view)
@@ -46,11 +56,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }

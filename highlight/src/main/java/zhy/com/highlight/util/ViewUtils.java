@@ -1,4 +1,4 @@
-package com.zhy.highlight.util;
+package zhy.com.highlight.util;
 
 import android.app.Activity;
 import android.content.Context;

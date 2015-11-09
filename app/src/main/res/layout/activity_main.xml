@@ -36,7 +36,7 @@
             android:layout_alignParentTop="true"
             android:layout_margin="16dp"
             android:onClick="remove"
-            android:text="I am important...(remove)"
+            android:text="账户信息"
         />
 
 
