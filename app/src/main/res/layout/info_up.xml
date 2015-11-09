@@ -6,15 +6,14 @@
 
     <ImageView
         android:id="@+id/id_iv_arrow"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/jt_up"/>
 
 
     <ImageView
         android:layout_below="@id/id_iv_arrow"
-        android:layout_width="160dp"
-        android:layout_marginTop="-16dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/info_text" />
 

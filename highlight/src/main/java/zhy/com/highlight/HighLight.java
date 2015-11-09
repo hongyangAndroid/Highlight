@@ -1,7 +1,7 @@
 package zhy.com.highlight;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.graphics.RectF;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,24 +19,43 @@ import zhy.com.highlight.view.HightLightView;
  */
 public class HighLight
 {
+
+
     public static class ViewPosInfo
     {
         public int layoutId = -1;
         public RectF rectF;
-        public int left;
-        public int top;
+        public MarginInfo marginInfo;
+    }
+
+    public static class MarginInfo
+    {
+        public float topMargin;
+        public float leftMargin;
+        public float rightMargin;
+        public float bottomMargin;
+
+    }
+
+    public static interface OnPosCallback
+    {
+        void getPos(float rightMargin, float bottomMargin, RectF rectF, MarginInfo marginInfo);
     }
 
     private View mAnchor;
     private List<ViewPosInfo> mViewRects;
     private Context mContext;
     private HightLightView mHightLightView;
-    private boolean intercept ;
+
+    private boolean intercept = true;
+    private boolean shadow = true;
+    private int maskColor = 0xCC000000;
 
     public HighLight(Context context)
     {
         mContext = context;
         mViewRects = new ArrayList<ViewPosInfo>();
+        mAnchor = ((Activity) mContext).findViewById(android.R.id.content);
     }
 
     public HighLight anchor(View anchor)
@@ -51,12 +70,18 @@ public class HighLight
         return this;
     }
 
-
-
-    public static interface OnPosCallback
+    public HighLight shadow(boolean shadow)
     {
-        Point getPos(RectF rectF);
+        this.shadow = shadow;
+        return this;
     }
+
+    public HighLight maskColor(int maskColor)
+    {
+        this.maskColor = maskColor;
+        return this;
+    }
+
 
     public HighLight addHighLight(int viewId, int decorLayoutId, OnPosCallback onPosCallback)
     {
@@ -78,25 +103,21 @@ public class HighLight
         {
             throw new IllegalArgumentException("onPosCallback can not be null.");
         }
-        Point pos = onPosCallback.getPos(rect);
-        if (pos == null && decorLayoutId != -1)
-        {
-            throw new IllegalArgumentException("onPosCallback.getPos() can not be null.");
-        }
-        viewPosInfo.left = pos.x;
-        viewPosInfo.top = pos.y;
+        MarginInfo marginInfo = new MarginInfo();
+        onPosCallback.getPos(parent.getWidth() - rect.right, parent.getHeight() - rect.bottom, rect, marginInfo);
+        viewPosInfo.marginInfo = marginInfo;
         mViewRects.add(viewPosInfo);
 
         return this;
     }
 
 
-    public void build()
+    public void show()
     {
 
         if (mHightLightView != null) return;
 
-        HightLightView hightLightView = new HightLightView(mContext, mAnchor, mViewRects);
+        HightLightView hightLightView = new HightLightView(mContext, mAnchor, maskColor, shadow, mViewRects);
         if (mAnchor instanceof FrameLayout || mAnchor instanceof RelativeLayout)
         {
             ((ViewGroup) mAnchor).addView(hightLightView);
@@ -111,7 +132,7 @@ public class HighLight
             frameLayout.addView(hightLightView);
         }
 
-        if(intercept)
+        if (intercept)
         {
             hightLightView.setOnClickListener(new View.OnClickListener()
             {

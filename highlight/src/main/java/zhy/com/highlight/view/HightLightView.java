@@ -7,9 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import java.util.List;
@@ -31,12 +31,18 @@ public class HightLightView extends FrameLayout
     private View mAnchor;
     private LayoutInflater mInflater;
 
-    public HightLightView(Context context, View anchor, List<HighLight.ViewPosInfo> viewRects)
+    //some config
+    private boolean isBlur = true;
+    private int maskColor = 0xCC000000;
+
+    public HightLightView(Context context, View anchor, int maskColor, boolean isBlur, List<HighLight.ViewPosInfo> viewRects)
     {
         super(context);
         mInflater = LayoutInflater.from(context);
         mViewRects = viewRects;
         mAnchor = anchor;
+        this.maskColor = maskColor;
+        this.isBlur = isBlur;
         setWillNotDraw(false);
         init();
     }
@@ -46,7 +52,8 @@ public class HightLightView extends FrameLayout
         mPaint = new Paint();
         mPaint.setDither(true);
         mPaint.setAntiAlias(true);
-        mPaint.setMaskFilter(new BlurMaskFilter(DEFAULT_WIDTH_BLUR, BlurMaskFilter.Blur.SOLID));
+        if (isBlur)
+            mPaint.setMaskFilter(new BlurMaskFilter(DEFAULT_WIDTH_BLUR, BlurMaskFilter.Blur.SOLID));
         mPaint.setStyle(Paint.Style.FILL);
 
         buildMask();
@@ -58,9 +65,17 @@ public class HightLightView extends FrameLayout
         for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
         {
             View view = mInflater.inflate(viewPosInfo.layoutId, this, false);
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            lp.leftMargin = viewPosInfo.left;
-            lp.topMargin = viewPosInfo.top;
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) view.getLayoutParams();
+            lp.leftMargin = (int) viewPosInfo.marginInfo.leftMargin;
+            lp.topMargin = (int) viewPosInfo.marginInfo.topMargin;
+            lp.rightMargin = (int) viewPosInfo.marginInfo.rightMargin;
+            lp.bottomMargin = (int) viewPosInfo.marginInfo.bottomMargin;
+
+            if (lp.leftMargin == 0 && lp.topMargin == 0)
+            {
+                lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+            }
+
             addView(view, lp);
         }
     }
@@ -69,7 +84,7 @@ public class HightLightView extends FrameLayout
     {
         mMaskBitmap = Bitmap.createBitmap(mAnchor.getMeasuredWidth(), mAnchor.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mMaskBitmap);
-        canvas.drawColor(0xCC000000);
+        canvas.drawColor(maskColor);
         mPaint.setXfermode(MODE_DST_OUT);
 
         for (HighLight.ViewPosInfo viewPosInfo : mViewRects)

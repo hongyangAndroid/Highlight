@@ -1,6 +1,5 @@
 package com.zhy.highlight;
 
-import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,26 +21,52 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 
-        findViewById(R.id.id_btn_amazing).post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mHightLight = new HighLight(MainActivity.this)//
-                        .anchor(findViewById(R.id.id_container))//
-                        .addHighLight(R.id.id_btn_important, R.layout.info_up, new HighLight.OnPosCallback()
+        findViewById(R.id.id_btn_amazing).post(
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        showTipMask();
+                    }
+                }
+
+        );
+
+    }
+
+    private void showTipMask()
+    {
+        mHightLight = new HighLight(MainActivity.this)//
+                //.anchor(findViewById(R.id.id_container))//
+                .addHighLight(R.id.id_btn_important, R.layout.info_up,
+                        new HighLight.OnPosCallback()
                         {
                             @Override
-                            public Point getPos(RectF rectF)
+                            public void getPos(float rightMargin, float bottomMargin, RectF rectF, HighLight.MarginInfo marginInfo)
                             {
-                                return new Point((int) (rectF.left + rectF.width()) / 2, (int) rectF.bottom);
+                                marginInfo.leftMargin = rectF.right - rectF.width() / 2;
+                                marginInfo.topMargin = rectF.bottom;
                             }
-                        }).intercept(true);
+                        })//
+                .addHighLight(R.id.id_btn_amazing, R.layout.info_down, new HighLight.OnPosCallback()
+                {
+                    /**
+                     * @param rightMargin 高亮view在anchor中的右边距
+                     * @param bottomMargin 高亮view在anchor中的下边距
+                     * @param rectF 高亮view的l,t,r,b,w,h都有
+                     * @param marginInfo 设置你的布局的位置，一般设置l,t或者r,b
+                     */
+                    @Override
+                    public void getPos(float rightMargin, float bottomMargin, RectF rectF, HighLight.MarginInfo marginInfo)
+                    {
+                        marginInfo.rightMargin = rightMargin + rectF.width() / 2;
+                        marginInfo.bottomMargin = bottomMargin + rectF.height();
+                    }
 
-                mHightLight.build();
-            }
-        });
+                }).intercept(true);
 
+        mHightLight.show();
     }
 
 
@@ -52,7 +77,7 @@ public class MainActivity extends AppCompatActivity
 
     public void add(View view)
     {
-        mHightLight.build();
+        mHightLight.show();
     }
 
 
