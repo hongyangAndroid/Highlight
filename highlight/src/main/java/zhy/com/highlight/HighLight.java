@@ -99,7 +99,7 @@ public class HighLight
         {
 
             RectF rect = new RectF(ViewUtils.getLocationInView(parent, viewPosInfo.view));
-            if (!rect.equals(viewPosInfo.rectF))//TODO bug dismissed...fc...
+//            if (!rect.equals(viewPosInfo.rectF))//TODO bug dismissed...fc...
             {
                 viewPosInfo.rectF = rect;
                 viewPosInfo.onPosCallback.getPos(parent.getWidth() - rect.right, parent.getHeight() - rect.bottom, rect, viewPosInfo.marginInfo);

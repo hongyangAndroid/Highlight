@@ -155,11 +155,13 @@ public class HightLightView extends FrameLayout
         return lp;
     }
 
+
     @Override
     protected void onDraw(Canvas canvas)
     {
 
         canvas.drawBitmap(mMaskBitmap, 0, 0, null);
         super.onDraw(canvas);
+
     }
 }

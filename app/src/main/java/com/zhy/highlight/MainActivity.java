@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
 //            View container = findViewById(R.id.id_container);
 //            ViewGroup.LayoutParams lp =
 //                    container.getLayoutParams();
-//            lp.height = container.getMeasuredHeight() -100;
+//            lp.height = container.getMeasuredHeight() + 100;
 //            findViewById(R.id.id_container).setLayoutParams(lp);
         }
         return super.onOptionsItemSelected(item);
