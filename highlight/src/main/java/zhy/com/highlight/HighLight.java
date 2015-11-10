@@ -19,14 +19,13 @@ import zhy.com.highlight.view.HightLightView;
  */
 public class HighLight
 {
-
-
     public static class ViewPosInfo
     {
         public int layoutId = -1;
         public RectF rectF;
         public MarginInfo marginInfo;
         public View view;
+        public OnPosCallback onPosCallback;
     }
 
     public static class MarginInfo
@@ -42,6 +41,7 @@ public class HighLight
     {
         void getPos(float rightMargin, float bottomMargin, RectF rectF, MarginInfo marginInfo);
     }
+
 
     private View mAnchor;
     private List<ViewPosInfo> mViewRects;
@@ -97,8 +97,13 @@ public class HighLight
         ViewGroup parent = (ViewGroup) mAnchor;
         for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
         {
+
             RectF rect = new RectF(ViewUtils.getLocationInView(parent, viewPosInfo.view));
-            viewPosInfo.rectF = rect;
+            if (!rect.equals(viewPosInfo.rectF))//TODO bug dismissed...fc...
+            {
+                viewPosInfo.rectF = rect;
+                viewPosInfo.onPosCallback.getPos(parent.getWidth() - rect.right, parent.getHeight() - rect.bottom, rect, viewPosInfo.marginInfo);
+            }
         }
 
     }
@@ -119,6 +124,7 @@ public class HighLight
         MarginInfo marginInfo = new MarginInfo();
         onPosCallback.getPos(parent.getWidth() - rect.right, parent.getHeight() - rect.bottom, rect, marginInfo);
         viewPosInfo.marginInfo = marginInfo;
+        viewPosInfo.onPosCallback = onPosCallback;
         mViewRects.add(viewPosInfo);
 
         return this;

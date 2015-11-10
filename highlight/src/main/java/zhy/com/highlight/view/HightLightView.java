@@ -67,7 +67,9 @@ public class HightLightView extends FrameLayout
         for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
         {
             View view = mInflater.inflate(viewPosInfo.layoutId, this, false);
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) view.getLayoutParams();
+            FrameLayout.LayoutParams lp = buildTipLayoutParams(view, viewPosInfo);
+
+            if (lp == null) continue;
 
             lp.leftMargin = (int) viewPosInfo.marginInfo.leftMargin;
             lp.topMargin = (int) viewPosInfo.marginInfo.topMargin;
@@ -98,7 +100,6 @@ public class HightLightView extends FrameLayout
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
-
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
@@ -113,15 +114,52 @@ public class HightLightView extends FrameLayout
     protected void onLayout(boolean changed, int left, int top, int right, int bottom)
     {
         super.onLayout(changed, left, top, right, bottom);
-        buildMask();
+        if (changed)
+        {
+            buildMask();
+            updateTipPos();
+        }
+
     }
 
+    private void updateTipPos()
+    {
+        for (int i = 0, n = getChildCount(); i < n; i++)
+        {
+            View view = getChildAt(i);
+            HighLight.ViewPosInfo viewPosInfo = mViewRects.get(i);
+
+            LayoutParams lp = buildTipLayoutParams(view, viewPosInfo);
+            if (lp == null) continue;
+            view.setLayoutParams(lp);
+        }
+    }
+
+    private LayoutParams buildTipLayoutParams(View view, HighLight.ViewPosInfo viewPosInfo)
+    {
+        LayoutParams lp = (LayoutParams) view.getLayoutParams();
+        if (lp.leftMargin == (int) viewPosInfo.marginInfo.leftMargin &&
+                lp.topMargin == (int) viewPosInfo.marginInfo.topMargin &&
+                lp.rightMargin == (int) viewPosInfo.marginInfo.rightMargin &&
+                lp.bottomMargin == (int) viewPosInfo.marginInfo.bottomMargin) return null;
+
+        lp.leftMargin = (int) viewPosInfo.marginInfo.leftMargin;
+        lp.topMargin = (int) viewPosInfo.marginInfo.topMargin;
+        lp.rightMargin = (int) viewPosInfo.marginInfo.rightMargin;
+        lp.bottomMargin = (int) viewPosInfo.marginInfo.bottomMargin;
+
+        if (lp.leftMargin == 0 && lp.topMargin == 0)
+        {
+            lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        }
+        return lp;
+    }
 
     @Override
     protected void onDraw(Canvas canvas)
     {
+
         canvas.drawBitmap(mMaskBitmap, 0, 0, null);
         super.onDraw(canvas);
-
     }
 }

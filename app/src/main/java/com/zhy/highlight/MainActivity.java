@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
                         marginInfo.bottomMargin = bottomMargin + rectF.height();
                     }
 
-                }).intercept(true);
+                });
 
         mHightLight.show();
     }
@@ -101,8 +101,13 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings)
         {
+            //test  container change
+//            View container = findViewById(R.id.id_container);
+//            ViewGroup.LayoutParams lp =
+//                    container.getLayoutParams();
+//            lp.height = container.getMeasuredHeight() -100;
+//            findViewById(R.id.id_container).setLayoutParams(lp);
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
