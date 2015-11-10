@@ -37,6 +37,7 @@ public class ViewUtils
         while (tmp != decorView && tmp != parent)
         {
             tmp.getHitRect(tmpRect);
+
             result.left += tmpRect.left;
             result.top += tmpRect.top;
             tmp = (View) tmp.getParent();

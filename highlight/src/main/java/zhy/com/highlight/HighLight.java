@@ -26,6 +26,7 @@ public class HighLight
         public int layoutId = -1;
         public RectF rectF;
         public MarginInfo marginInfo;
+        public View view;
     }
 
     public static class MarginInfo
@@ -91,6 +92,17 @@ public class HighLight
         return this;
     }
 
+    public void updateInfo()
+    {
+        ViewGroup parent = (ViewGroup) mAnchor;
+        for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
+        {
+            RectF rect = new RectF(ViewUtils.getLocationInView(parent, viewPosInfo.view));
+            viewPosInfo.rectF = rect;
+        }
+
+    }
+
 
     public HighLight addHighLight(View view, int decorLayoutId, OnPosCallback onPosCallback)
     {
@@ -99,6 +111,7 @@ public class HighLight
         ViewPosInfo viewPosInfo = new ViewPosInfo();
         viewPosInfo.layoutId = decorLayoutId;
         viewPosInfo.rectF = rect;
+        viewPosInfo.view = view;
         if (onPosCallback == null && decorLayoutId != -1)
         {
             throw new IllegalArgumentException("onPosCallback can not be null.");
@@ -117,10 +130,12 @@ public class HighLight
 
         if (mHightLightView != null) return;
 
-        HightLightView hightLightView = new HightLightView(mContext, mAnchor, maskColor, shadow, mViewRects);
+        HightLightView hightLightView = new HightLightView(mContext, this, maskColor, shadow, mViewRects);
         if (mAnchor instanceof FrameLayout || mAnchor instanceof RelativeLayout)
         {
-            ((ViewGroup) mAnchor).addView(hightLightView);
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
+                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ((ViewGroup) mAnchor).addView(hightLightView, lp);
 
         } else
         {

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
     private void showTipMask()
     {
         mHightLight = new HighLight(MainActivity.this)//
-                //.anchor(findViewById(R.id.id_container))//
+                .anchor(findViewById(R.id.id_container))//
                 .addHighLight(R.id.id_btn_important, R.layout.info_up,
                         new HighLight.OnPosCallback()
                         {
@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+
         return true;
     }
 
@@ -99,7 +101,6 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings)
         {
-            return true;
         }
 
         return super.onOptionsItemSelected(item);

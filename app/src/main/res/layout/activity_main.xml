@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     >
 
-
     <Button android:id="@+id/id_btn_amazing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,7 +31,6 @@
             android:onClick="remove"
             android:text="账户信息"
         />
-
 
 
 </RelativeLayout>
