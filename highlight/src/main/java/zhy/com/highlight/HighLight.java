@@ -141,7 +141,7 @@ public class HighLight
         {
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((ViewGroup) mAnchor).addView(hightLightView, lp);
+            ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
 
         } else
         {
