@@ -8,9 +8,9 @@
     <Button android:id="@+id/id_btn_amazing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
             android:onClick="add"
             android:text="Amazing...(show)"/>
 
@@ -39,6 +39,8 @@
             android:onClick="remove"
             android:text="账户信息"
         />
+
+
 
 
 </RelativeLayout>

@@ -137,7 +137,7 @@ public class HighLight
         if (mHightLightView != null) return;
 
         HightLightView hightLightView = new HightLightView(mContext, this, maskColor, shadow, mViewRects);
-        if (mAnchor instanceof FrameLayout || mAnchor instanceof RelativeLayout)
+        if (mAnchor instanceof FrameLayout)
         {
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
