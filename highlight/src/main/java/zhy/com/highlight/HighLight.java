@@ -149,7 +149,10 @@ public class HighLight
             ViewGroup parent = (ViewGroup) mAnchor.getParent();
             parent.removeView(mAnchor);
             parent.addView(frameLayout, mAnchor.getLayoutParams());
-            frameLayout.addView(mAnchor);
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
+                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            frameLayout.addView(mAnchor,lp);
+
             frameLayout.addView(hightLightView);
         }
 
