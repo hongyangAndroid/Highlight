@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
     private void showTipMask()
     {
         mHightLight = new HighLight(MainActivity.this)//
-//                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
                 .addHighLight(R.id.id_btn_important, R.layout.info_up,
                         new HighLight.OnPosCallback()
                         {

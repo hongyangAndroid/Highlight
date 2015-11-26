@@ -137,7 +137,7 @@ public class HighLight
         if (mHightLightView != null) return;
 
         HightLightView hightLightView = new HightLightView(mContext, this, maskColor, shadow, mViewRects);
-        if (mAnchor instanceof FrameLayout)
+        if (mAnchor.getClass().getSimpleName().equals("FrameLayout"))
         {
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -151,7 +151,7 @@ public class HighLight
             parent.addView(frameLayout, mAnchor.getLayoutParams());
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            frameLayout.addView(mAnchor,lp);
+            frameLayout.addView(mAnchor, lp);
 
             frameLayout.addView(hightLightView);
         }

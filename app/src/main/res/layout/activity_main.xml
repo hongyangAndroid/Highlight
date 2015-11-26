@@ -1,46 +1,45 @@
-<RelativeLayout
-    android:id="@+id/id_container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
 
-    <Button android:id="@+id/id_btn_amazing"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/id_container"
+        >
+
+        <Button android:id="@+id/id_btn_amazing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="16dp"
+                android:onClick="add"
+                android:text="Amazing...(show)"/>
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
             android:layout_margin="16dp"
-            android:onClick="add"
-            android:text="Amazing...(show)"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="16dp"
-        android:text="Who am I"/>
+            android:text="Who am I"/>
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="16dp"
-        android:text="Who am I"/>
-
-    <Button android:id="@+id/id_btn_important"
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
             android:layout_margin="16dp"
-            android:onClick="remove"
-            android:text="账户信息"
-        />
+            android:text="Who am I"/>
+
+        <Button android:id="@+id/id_btn_important"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="16dp"
+                android:onClick="remove"
+                android:text="账户信息"
+            />
 
 
-
-
-</RelativeLayout>
+    </RelativeLayout>

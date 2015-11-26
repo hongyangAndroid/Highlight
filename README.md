@@ -24,6 +24,12 @@ dependencies {
 
 ```
 
+或者
+
+```
+  compile 'com.zhy:highlight:1.0.0'
+```
+
 ## 用法
 
 对于上面效果图中的一个需要高亮的View，需要通过下面的代码
