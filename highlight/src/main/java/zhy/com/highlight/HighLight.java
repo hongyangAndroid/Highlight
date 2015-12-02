@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zhy.com.highlight.util.ViewUtils;
-import zhy.com.highlight.view.HightLightView;
+import zhy.com.highlight.view.HighLightView;
 
 /**
  * Created by zhy on 15/10/8.
@@ -48,7 +48,7 @@ public class HighLight
     private View mAnchor;
     private List<ViewPosInfo> mViewRects;
     private Context mContext;
-    private HightLightView mHightLightView;
+    private HighLightView mHighLightView;
 
     private boolean intercept = true;
     private boolean shadow = true;
@@ -136,15 +136,15 @@ public class HighLight
     public void show()
     {
 
-        if (mHightLightView != null) return;
+        if (mHighLightView != null) return;
 
-        HightLightView hightLightView = new HightLightView(mContext, this, maskColor, shadow, mViewRects);
+        HighLightView highLightView = new HighLightView(mContext, this, maskColor, shadow, mViewRects);
         if (mAnchor.getClass().getSimpleName().equals("FrameLayout"))
         {
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
-            hightLightView.setTag(TAG);
+            ((ViewGroup) mAnchor).addView(highLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
+            highLightView.setTag(TAG);
         } else
         {
             FrameLayout frameLayout = new FrameLayout(mContext);
@@ -155,13 +155,13 @@ public class HighLight
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             frameLayout.addView(mAnchor, lp);
 
-            frameLayout.addView(hightLightView);
-            hightLightView.setTag("");
+            frameLayout.addView(highLightView);
+            highLightView.setTag("");
         }
 
         if (intercept)
         {
-            hightLightView.setOnClickListener(new View.OnClickListener()
+            highLightView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -171,26 +171,26 @@ public class HighLight
             });
         }
 
-        mHightLightView = hightLightView;
+        mHighLightView = highLightView;
     }
 
     public void remove()
     {
-        if (mHightLightView == null) return;
-        ViewGroup parent = (ViewGroup) mHightLightView.getParent();
-        if (mHightLightView.getTag().equals(TAG))
+        if (mHighLightView == null) return;
+        ViewGroup parent = (ViewGroup) mHighLightView.getParent();
+        if (mHighLightView.getTag().equals(TAG))
         {
-            parent.removeView(mHightLightView);
+            parent.removeView(mHighLightView);
         } else
         {
-            parent.removeView(mHightLightView);
+            parent.removeView(mHighLightView);
             View origin = parent.getChildAt(0);
             parent.removeView(origin);
             ViewGroup graParent = (ViewGroup) parent.getParent();
             graParent.removeView(parent);
             graParent.addView(origin, parent.getLayoutParams());
         }
-        mHightLightView = null;
+        mHighLightView = null;
     }
 
 

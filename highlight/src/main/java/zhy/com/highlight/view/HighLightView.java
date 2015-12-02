@@ -19,7 +19,7 @@ import zhy.com.highlight.HighLight;
 /**
  * Created by zhy on 15/10/8.
  */
-public class HightLightView extends FrameLayout
+public class HighLightView extends FrameLayout
 {
     private static final int DEFAULT_WIDTH_BLUR = 15;
     private static final int DEFAULT_RADIUS = 6;
@@ -36,7 +36,7 @@ public class HightLightView extends FrameLayout
     private int maskColor = 0xCC000000;
 
 
-    public HightLightView(Context context, HighLight highLight, int maskColor, boolean isBlur, List<HighLight.ViewPosInfo> viewRects)
+    public HighLightView(Context context, HighLight highLight, int maskColor, boolean isBlur, List<HighLight.ViewPosInfo> viewRects)
     {
         super(context);
         mHighLight = highLight;
