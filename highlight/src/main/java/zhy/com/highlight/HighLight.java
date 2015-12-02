@@ -19,6 +19,8 @@ import zhy.com.highlight.view.HightLightView;
  */
 public class HighLight
 {
+    private static final String TAG = "anchorIsFrameLayout";
+
     public static class ViewPosInfo
     {
         public int layoutId = -1;
@@ -142,7 +144,7 @@ public class HighLight
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
-
+            hightLightView.setTag(TAG);
         } else
         {
             FrameLayout frameLayout = new FrameLayout(mContext);
@@ -154,6 +156,7 @@ public class HighLight
             frameLayout.addView(mAnchor, lp);
 
             frameLayout.addView(hightLightView);
+            hightLightView.setTag("");
         }
 
         if (intercept)
@@ -175,13 +178,14 @@ public class HighLight
     {
         if (mHightLightView == null) return;
         ViewGroup parent = (ViewGroup) mHightLightView.getParent();
-        if (parent instanceof RelativeLayout || parent instanceof FrameLayout)
+        if (mHightLightView.getTag().equals(TAG))
         {
             parent.removeView(mHightLightView);
         } else
         {
             parent.removeView(mHightLightView);
             View origin = parent.getChildAt(0);
+            parent.removeView(origin);
             ViewGroup graParent = (ViewGroup) parent.getParent();
             graParent.removeView(parent);
             graParent.addView(origin, parent.getLayoutParams());
