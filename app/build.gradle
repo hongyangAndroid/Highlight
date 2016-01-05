@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "23.0.0 rc3"
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.zhy.highlight"
