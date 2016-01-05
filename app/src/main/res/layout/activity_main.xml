@@ -16,6 +16,7 @@
                 android:text="Amazing...(show)"/>
 
         <Button
+            android:id="@+id/id_btn_whoami"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -41,5 +42,14 @@
                 android:text="账户信息"
             />
 
+        <Button android:id="@+id/id_btn_important_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="16dp"
+            android:onClick="remove"
+            android:text="账户信息"
+            />
 
     </RelativeLayout>

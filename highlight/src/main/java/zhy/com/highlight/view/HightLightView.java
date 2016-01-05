@@ -76,9 +76,22 @@ public class HightLightView extends FrameLayout
             lp.rightMargin = (int) viewPosInfo.marginInfo.rightMargin;
             lp.bottomMargin = (int) viewPosInfo.marginInfo.bottomMargin;
 
-            if (lp.leftMargin == 0 && lp.topMargin == 0)
-            {
-                lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+            //fix the bug can't set gravity  LEFT|BOTTOM  or RIGHT|TOP
+//            if (lp.leftMargin == 0 && lp.topMargin == 0)
+//            {
+//                lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+//            }
+
+            if(lp.rightMargin != 0){
+                lp.gravity = Gravity.RIGHT;
+            }else {
+                lp.gravity = Gravity.LEFT;
+            }
+
+            if(lp.bottomMargin != 0){
+                lp.gravity |= Gravity.BOTTOM;
+            }else {
+                lp.gravity |= Gravity.TOP;
             }
             addView(view, lp);
         }
@@ -148,9 +161,21 @@ public class HightLightView extends FrameLayout
         lp.rightMargin = (int) viewPosInfo.marginInfo.rightMargin;
         lp.bottomMargin = (int) viewPosInfo.marginInfo.bottomMargin;
 
-        if (lp.leftMargin == 0 && lp.topMargin == 0)
-        {
-            lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        //fix the bug can't set gravity  LEFT|BOTTOM  or RIGHT|TOP
+//        if (lp.leftMargin == 0 && lp.topMargin == 0)
+//        {
+//            lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+//        }
+        if(lp.rightMargin != 0){
+            lp.gravity = Gravity.RIGHT;
+        }else {
+            lp.gravity = Gravity.LEFT;
+        }
+
+        if(lp.bottomMargin != 0){
+            lp.gravity |= Gravity.BOTTOM;
+        }else {
+            lp.gravity |= Gravity.TOP;
         }
         return lp;
     }

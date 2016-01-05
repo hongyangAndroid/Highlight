@@ -42,11 +42,17 @@ public class HighLight
         void getPos(float rightMargin, float bottomMargin, RectF rectF, MarginInfo marginInfo);
     }
 
+    public static interface OnClickCallback
+    {
+        void onClick();
+    }
+
 
     private View mAnchor;
     private List<ViewPosInfo> mViewRects;
     private Context mContext;
     private HightLightView mHightLightView;
+    private OnClickCallback clickCallback;
 
     private boolean intercept = true;
     private boolean shadow = true;
@@ -130,6 +136,13 @@ public class HighLight
         return this;
     }
 
+    // 一个场景可能有多个步骤的高亮。一个步骤完成之后再进行下一个步骤的高亮
+    // 添加点击事件，将每次点击传给应用逻辑
+    public HighLight setClickCallback(OnClickCallback clickCallback){
+        this.clickCallback = clickCallback;
+        return this;
+    }
+
 
     public void show()
     {
@@ -164,6 +177,9 @@ public class HighLight
                 public void onClick(View v)
                 {
                     remove();
+                    if(clickCallback != null){
+                        clickCallback.onClick();
+                    }
                 }
             });
         }
