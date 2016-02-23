@@ -10,6 +10,8 @@ import android.view.View;
  */
 public class ViewUtils
 {
+    private static final String FRAGMENT_CON = "NoSaveStateFrameLayout";
+
     public static Rect getLocationInView(View parent, View child)
     {
         if (child == null || parent == null)
@@ -37,9 +39,11 @@ public class ViewUtils
         while (tmp != decorView && tmp != parent)
         {
             tmp.getHitRect(tmpRect);
-
-            result.left += tmpRect.left;
-            result.top += tmpRect.top;
+            if (!tmp.getClass().equals(FRAGMENT_CON))
+            {
+                result.left += tmpRect.left;
+                result.top += tmpRect.top;
+            }
             tmp = (View) tmp.getParent();
         }
         result.right = result.left + child.getMeasuredWidth();

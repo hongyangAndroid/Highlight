@@ -27,7 +27,7 @@ dependencies {
 或者
 
 ```
-  compile 'com.zhy:highlight:1.0.0'
+  compile 'com.zhy:highlight:1.1.0'
 ```
 
 ## 用法
