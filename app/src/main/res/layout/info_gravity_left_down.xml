@@ -14,10 +14,10 @@
         />
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/id_iv_tip"
-        android:src="@drawable/jt_down"/>
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/id_iv_tip"-->
+        <!--android:src="@drawable/jt_down"/>-->
 
 </RelativeLayout>

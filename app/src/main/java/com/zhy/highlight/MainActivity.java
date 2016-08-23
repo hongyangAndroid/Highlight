@@ -1,14 +1,18 @@
 package com.zhy.highlight;
 
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import zhy.com.highlight.HighLight;
+import zhy.com.highlight.position.OnBottomPosCallback;
+import zhy.com.highlight.position.OnLeftPosCallback;
+import zhy.com.highlight.position.OnRightPosCallback;
+import zhy.com.highlight.position.OnTopPosCallback;
+import zhy.com.highlight.shape.CircleLightShape;
+import zhy.com.highlight.shape.RectLightShape;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -22,24 +26,33 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 
-        findViewById(R.id.id_btn_amazing).post(
-                new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        showTipMask();
-                    }
-                }
-
-        );
+//        findViewById(R.id.id_btn_amazing).post(
+//                new Runnable()
+//                {
+//                    @Override
+//                    public void run()
+//                    {
+//                        showTipMask();
+//                    }
+//                }
+//
+//        );
 
     }
-
-    private void showTipMask()
-    {
+    public  void showTipView(View view){
         mHightLight = new HighLight(MainActivity.this)//
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .addHighLight(R.id.btn_rightLight,R.layout.info_gravity_left_down,new OnLeftPosCallback(45),new RectLightShape())
+                .addHighLight(R.id.btn_light,R.layout.info_gravity_left_down,new OnRightPosCallback(5),new CircleLightShape())
+                .addHighLight(R.id.btn_bottomLight,R.layout.info_gravity_left_down,new OnTopPosCallback(),new CircleLightShape())
+                .addHighLight(view,R.layout.info_gravity_left_down,new OnBottomPosCallback(60),new CircleLightShape());
+        mHightLight.show();
+    }
+    private void showTipMask()
+    {
+//        mHightLight = new HighLight(MainActivity.this)//
+//                .anchor(findViewById(R.id.id_container))
+        //如果是Activity上增加引导层，不需要设置anchor
 //                .addHighLight(R.id.id_btn_important, R.layout.info_up,
 //                        new HighLight.OnPosCallback()
 //                        {
@@ -66,32 +79,39 @@ public class MainActivity extends AppCompatActivity
 //                    }
 //
 //                });
-        .addHighLight(R.id.id_btn_important_right,R.layout.info_gravity_right_up, new HighLight.OnPosCallback(){
+//        .addHighLight(R.id.id_btn_important_right,R.layout.info_gravity_right_up, new HighLight.OnPosCallback(){
+//
+//
+//            @Override
+//            public void getPos(float rightMargin, float bottomMargin, RectF rectF, HighLight.MarginInfo marginInfo) {
+//                marginInfo.rightMargin = rightMargin;
+//                marginInfo.topMargin = rectF.top + rectF.height();
+//            }
+//        })
+//        .addHighLight(R.id.id_btn_whoami, R.layout.info_gravity_left_down, new HighLight.OnPosCallback() {
+//
+//
+//            @Override
+//            public void getPos(float rightMargin, float bottomMargin, RectF rectF, HighLight.MarginInfo marginInfo) {
+//                marginInfo.leftMargin = rectF.right - rectF.width()/2;
+//                marginInfo.bottomMargin = bottomMargin + rectF.height();
+//            }
+//        })
+//        .setClickCallback(new HighLight.OnClickCallback() {
+//            @Override
+//            public void onClick() {
+//                Toast.makeText(MainActivity.this,"clicked",Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
-
-            @Override
-            public void getPos(float rightMargin, float bottomMargin, RectF rectF, HighLight.MarginInfo marginInfo) {
-                marginInfo.rightMargin = rightMargin;
-                marginInfo.topMargin = rectF.top + rectF.height();
-            }
-        })
-        .addHighLight(R.id.id_btn_whoami, R.layout.info_gravity_left_down, new HighLight.OnPosCallback() {
-
-
-            @Override
-            public void getPos(float rightMargin, float bottomMargin, RectF rectF, HighLight.MarginInfo marginInfo) {
-                marginInfo.leftMargin = rectF.right - rectF.width()/2;
-                marginInfo.bottomMargin = bottomMargin + rectF.height();
-            }
-        })
-        .setClickCallback(new HighLight.OnClickCallback() {
-            @Override
-            public void onClick() {
-                Toast.makeText(MainActivity.this,"clicked",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mHightLight.show();
+//        mHightLight.show();
+//        mHightLight = new HighLight(MainActivity.this)//
+//                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+//                .addHighLight(R.id.btn_rightLight,R.layout.info_left, new OnLeftPosCallback(10),new RectLightShape())
+//                .addHighLight(R.id.btn_light,R.layout.info_right,new OnRightPosCallback(),new CircleLightShape())
+//                .addHighLight(R.id.btn_bottomLight,R.layout.info_up,new OnTopPosCallback(46),new CircleLightShape())
+//                .addHighLight(R.id.id_btn_amazing,R.layout.info_up,new OnBottomPosCallback(46),new CircleLightShape());
+//        mHightLight.show();
     }
 
 
