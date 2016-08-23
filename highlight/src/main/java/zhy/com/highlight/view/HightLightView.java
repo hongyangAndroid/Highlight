@@ -2,7 +2,6 @@ package zhy.com.highlight.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -26,24 +25,25 @@ public class HightLightView extends FrameLayout
     private static final PorterDuffXfermode MODE_DST_OUT = new PorterDuffXfermode(PorterDuff.Mode.DST_OUT);
 
     private Bitmap mMaskBitmap;
+    private Bitmap mLightBitmap;
     private Paint mPaint;
     private List<HighLight.ViewPosInfo> mViewRects;
     private HighLight mHighLight;
     private LayoutInflater mInflater;
 
     //some config
-    private boolean isBlur = true;
+//    private boolean isBlur = true;
     private int maskColor = 0xCC000000;
 
 
-    public HightLightView(Context context, HighLight highLight, int maskColor, boolean isBlur, List<HighLight.ViewPosInfo> viewRects)
+    public HightLightView(Context context, HighLight highLight, int maskColor, List<HighLight.ViewPosInfo> viewRects)
     {
         super(context);
         mHighLight = highLight;
         mInflater = LayoutInflater.from(context);
         mViewRects = viewRects;
         this.maskColor = maskColor;
-        this.isBlur = isBlur;
+//        this.isBlur = isBlur;
         setWillNotDraw(false);
         init();
     }
@@ -53,8 +53,8 @@ public class HightLightView extends FrameLayout
         mPaint = new Paint();
         mPaint.setDither(true);
         mPaint.setAntiAlias(true);
-        if (isBlur)
-            mPaint.setMaskFilter(new BlurMaskFilter(DEFAULT_WIDTH_BLUR, BlurMaskFilter.Blur.SOLID));
+//        if (isBlur)
+//            mPaint.setMaskFilter(new BlurMaskFilter(DEFAULT_WIDTH_BLUR, BlurMaskFilter.Blur.SOLID));
         mPaint.setStyle(Paint.Style.FILL);
 
         addViewForTip();
@@ -104,10 +104,11 @@ public class HightLightView extends FrameLayout
         canvas.drawColor(maskColor);
         mPaint.setXfermode(MODE_DST_OUT);
         mHighLight.updateInfo();
-        for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
-        {
-            canvas.drawRoundRect(viewPosInfo.rectF, DEFAULT_RADIUS, DEFAULT_RADIUS, mPaint);
+        mLightBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        for (HighLight.ViewPosInfo viewPosInfo : mViewRects) {
+            viewPosInfo.lightShape.shape(mLightBitmap,viewPosInfo);
         }
+        canvas.drawBitmap(mLightBitmap,0,0,mPaint);
     }
 
     @Override

@@ -2,6 +2,7 @@ package zhy.com.highlight;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import zhy.com.highlight.shape.RectLightShape;
 import zhy.com.highlight.util.ViewUtils;
 import zhy.com.highlight.view.HightLightView;
 
@@ -26,8 +28,11 @@ public class HighLight
         public MarginInfo marginInfo;
         public View view;
         public OnPosCallback onPosCallback;
+        public LightShape lightShape;
     }
-
+    public  interface LightShape{
+        public void shape(Bitmap bitmap, ViewPosInfo viewPosInfo);
+    }
     public static class MarginInfo
     {
         public float topMargin;
@@ -55,7 +60,7 @@ public class HighLight
     private OnClickCallback clickCallback;
 
     private boolean intercept = true;
-    private boolean shadow = true;
+//    private boolean shadow = true;
     private int maskColor = 0xCC000000;
 
     public HighLight(Context context)
@@ -77,11 +82,11 @@ public class HighLight
         return this;
     }
 
-    public HighLight shadow(boolean shadow)
-    {
-        this.shadow = shadow;
-        return this;
-    }
+//    public HighLight shadow(boolean shadow)
+//    {
+//        this.shadow = shadow;
+//        return this;
+//    }
 
     public HighLight maskColor(int maskColor)
     {
@@ -90,11 +95,11 @@ public class HighLight
     }
 
 
-    public HighLight addHighLight(int viewId, int decorLayoutId, OnPosCallback onPosCallback)
+    public HighLight addHighLight(int viewId, int decorLayoutId, OnPosCallback onPosCallback,LightShape lightShape)
     {
         ViewGroup parent = (ViewGroup) mAnchor;
         View view = parent.findViewById(viewId);
-        addHighLight(view, decorLayoutId, onPosCallback);
+        addHighLight(view, decorLayoutId, onPosCallback,lightShape);
         return this;
     }
 
@@ -115,7 +120,7 @@ public class HighLight
     }
 
 
-    public HighLight addHighLight(View view, int decorLayoutId, OnPosCallback onPosCallback)
+    public HighLight addHighLight(View view, int decorLayoutId, OnPosCallback onPosCallback,LightShape lightShape)
     {
         ViewGroup parent = (ViewGroup) mAnchor;
         RectF rect = new RectF(ViewUtils.getLocationInView(parent, view));
@@ -131,6 +136,7 @@ public class HighLight
         onPosCallback.getPos(parent.getWidth() - rect.right, parent.getHeight() - rect.bottom, rect, marginInfo);
         viewPosInfo.marginInfo = marginInfo;
         viewPosInfo.onPosCallback = onPosCallback;
+        viewPosInfo.lightShape = lightShape == null?new RectLightShape():lightShape;
         mViewRects.add(viewPosInfo);
 
         return this;
@@ -149,7 +155,7 @@ public class HighLight
 
         if (mHightLightView != null) return;
 
-        HightLightView hightLightView = new HightLightView(mContext, this, maskColor, shadow, mViewRects);
+        HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects);
         if (mAnchor.getClass().getSimpleName().equals("FrameLayout"))
         {
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams

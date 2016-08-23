@@ -6,50 +6,85 @@
         android:id="@+id/id_container"
         >
 
-        <Button android:id="@+id/id_btn_amazing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="16dp"
-                android:onClick="add"
-                android:text="Amazing...(show)"/>
-
-        <Button
-            android:id="@+id/id_btn_whoami"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="16dp"
-            android:text="Who am I"/>
-
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_margin="16dp"
-            android:text="Who am I"/>
-
-        <Button android:id="@+id/id_btn_important"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_margin="16dp"
-                android:onClick="remove"
-                android:text="账户信息"
-            />
-
-        <Button android:id="@+id/id_btn_important_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:onClick="showTipView"
+            android:layout_margin="30dp"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="16dp"
-            android:onClick="remove"
-            android:text="账户信息"
-            />
+            android:text="showTip" />
+
+        <Button
+            android:id="@+id/btn_light"
+            android:layout_marginTop="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="高亮按钮" />
+
+
+        <Button
+            android:id="@+id/btn_rightLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="290dp"
+            android:layout_alignParentRight="true"
+            android:text="高亮按钮1" />
+
+
+        <Button
+            android:layout_marginLeft="30dp"
+            android:id="@+id/btn_bottomLight"
+            android:layout_marginBottom="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:text="高亮按钮2" />
+        <!--<Button android:id="@+id/id_btn_amazing"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_margin="16dp"-->
+                <!--android:onClick="add"-->
+                <!--android:text="Amazing...(show)"/>-->
+
+        <!--<Button-->
+            <!--android:id="@+id/id_btn_whoami"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:text="Who am I"/>-->
+
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:text="Who am I"/>-->
+
+        <!--<Button android:id="@+id/id_btn_important"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_margin="16dp"-->
+                <!--android:onClick="remove"-->
+                <!--android:text="账户信息"-->
+            <!--/>-->
+
+        <!--<Button android:id="@+id/id_btn_important_right"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:onClick="remove"-->
+            <!--android:text="账户信息"-->
+            <!--/>-->
 
     </RelativeLayout>
