@@ -6,7 +6,7 @@
 
 ## 效果图
 
-<img src="highlight2.gif" width="320px"/>
+<img src="high_light_demo.gif" width="320px"/>
 
 横屏：
 
@@ -34,19 +34,43 @@ dependencies {
 
 对于上面效果图中的一个需要高亮的View，需要通过下面的代码
 
-```java
-new HighLight(MainActivity.this)//
-.anchor(findViewById(R.id.id_container))//
-.addHighLight(R.id.id_btn_important, R.layout.info_up,
-	new HighLight.OnPosCallback()
-	{
-	    @Override
-	    public void getPos(float rightMargin, float bottomMargin, RectF rectF, HighLight.MarginInfo marginInfo)
-	    {
-	        marginInfo.leftMargin = rectF.right - rectF.width() / 2;
-	        marginInfo.topMargin = rectF.bottom;
-	    }
-	})//
+```
+/**
+     * 显示我知道了提示高亮布局
+     * @param view id为R.id.iv_known的控件
+     */
+    public  void showKnownTipView(View view)
+    {
+        mHightLight = new HighLight(MainActivity.this)//
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
+//                .setClickCallback(new HighLight.OnClickCallback() {
+//                    @Override
+//                    public void onClick() {
+//                        Toast.makeText(MainActivity.this, "clicked and remove HightLight view by yourself", Toast.LENGTH_SHORT).show();
+//                        remove(null);
+//                    }
+//                })
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape())
+                .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape());
+        mHightLight.show();
+
+//        //added by isanwenyu@163.com 设置监听器只有最后一个添加到HightLightView的knownView响应了事件
+//        //优化在布局中声明onClick方法 {@link #clickKnown(view)}响应所有R.id.iv_known的控件的点击事件
+//        View decorLayout = mHightLight.getHightLightView();
+//        ImageView knownView = (ImageView) decorLayout.findViewById(R.id.iv_known);
+//        knownView.setOnClickListener(new View.OnClickListener()
+//          {
+//            @Override
+//            public void onClick(View view) {
+//                remove(null);
+//            }
+//        });
+    }
+
 ```
 
 anchor()指你需要在哪个view上加一层透明的蒙版，如果不设置，默认为android.R.id.content。也就是说，该库支持局部范围内去高亮某些View.

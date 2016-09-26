@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
     public  void showKnownTipView(View view)
     {
         mHightLight = new HighLight(MainActivity.this)//
-                .autoRemove(false)//设置自动移除为false
+                .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
 //                .setClickCallback(new HighLight.OnClickCallback() {
 //                    @Override
 //                    public void onClick() {
