@@ -62,6 +62,7 @@ public class HighLight
     private boolean intercept = true;
 //    private boolean shadow = true;
     private int maskColor = 0xCC000000;
+    private boolean autoRemove = true;//点击是否自动移除 默认为true
 
     public HighLight(Context context)
     {
@@ -149,6 +150,27 @@ public class HighLight
         return this;
     }
 
+    /**
+     * 点击后是否自动移除
+     *
+     * @see #show()
+     * @see #remove()
+     * @return 链式接口 返回自身
+     */
+    public HighLight autoRemove(boolean autoRemove)
+    {
+        this.autoRemove=autoRemove;
+        return this;
+    }
+
+    /**
+     * 获取高亮布局 如果要获取decorLayout中布局请在{@link #show()}后调用
+     * @return 返回高亮布局
+     */
+    public HightLightView getHightLightView()
+    {
+        return mHightLightView;
+    }
 
     public void show()
     {
@@ -182,7 +204,9 @@ public class HighLight
                 @Override
                 public void onClick(View v)
                 {
-                    remove();
+                    //added autoRemove by isanwenyu@163.com
+                    if (autoRemove)  remove();
+
                     if(clickCallback != null){
                         clickCallback.onClick();
                     }
