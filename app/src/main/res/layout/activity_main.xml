@@ -7,6 +7,7 @@
         >
 
         <Button
+            android:id="@+id/btn_show_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showKnownTipView"
@@ -22,6 +23,11 @@
             android:layout_alignParentRight="true"
             android:text="showTip" />
 
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:entries="@array/entities"
+            android:layout_below="@id/btn_show_tip"/>
         <Button
             android:id="@+id/btn_light"
             android:layout_marginTop="200dp"
