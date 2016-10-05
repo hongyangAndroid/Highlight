@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import zhy.com.highlight.HighLight;
 import zhy.com.highlight.position.OnBottomPosCallback;
@@ -50,6 +51,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * 显示next模式提示布局
+     * @param view
+     */
+    public  void showNextTipView(View view){
+        mHightLight = new HighLight(MainActivity.this)//
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .addHighLight(R.id.btn_rightLight,R.layout.info_gravity_left_down,new OnLeftPosCallback(45),new RectLightShape())
+                .addHighLight(R.id.btn_light,R.layout.info_gravity_left_down,new OnRightPosCallback(5),new CircleLightShape())
+                .addHighLight(R.id.btn_bottomLight,R.layout.info_gravity_left_down,new OnTopPosCallback(),new CircleLightShape())
+                .addHighLight(view,R.layout.info_gravity_left_down,new OnBottomPosCallback(60),new CircleLightShape())
+                .autoRemove(false)
+                .enableNext()
+                .setClickCallback(new HighLight.OnClickCallback() {
+                    @Override
+                    public void onClick() {
+                        Toast.makeText(MainActivity.this, "clicked and show next tip view by yourself", Toast.LENGTH_SHORT).show();
+                        mHightLight.next();
+                    }
+                });
+        mHightLight.show();
+    }
+
+    /**
      * 显示我知道了提示高亮布局
      * @param view id为R.id.iv_known的控件
      */
@@ -57,7 +81,7 @@ public class MainActivity extends AppCompatActivity
     {
         mHightLight = new HighLight(MainActivity.this)//
                 .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
-                .intercept(false)
+                .intercept(true)
 //                .setClickCallback(new HighLight.OnClickCallback() {
 //                    @Override
 //                    public void onClick() {
@@ -86,6 +110,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * 显示 next模式 我知道了提示高亮布局
+     * @param view id为R.id.iv_known的控件
+     */
+    public  void showNextKnownTipView(View view)
+    {
+        mHightLight = new HighLight(MainActivity.this)//
+                .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
+                .intercept(false)
+                .enableNext()
+//                .setClickCallback(new HighLight.OnClickCallback() {
+//                    @Override
+//                    public void onClick() {
+//                        Toast.makeText(MainActivity.this, "clicked and remove HightLight view by yourself", Toast.LENGTH_SHORT).show();
+//                        remove(null);
+//                    }
+//                })
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape())
+                .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape());
+        mHightLight.show();
+    }
+
+    /**
      * 响应所有R.id.iv_known的控件的点击事件
      * <p>
      *  移除高亮布局
@@ -95,7 +144,13 @@ public class MainActivity extends AppCompatActivity
      */
     public void clickKnown(View view)
     {
-        remove(null);
+        if(mHightLight.isNext())
+        {
+            mHightLight.next();
+        }else
+        {
+            remove(null);
+        }
     }
 
     private void showTipMask()

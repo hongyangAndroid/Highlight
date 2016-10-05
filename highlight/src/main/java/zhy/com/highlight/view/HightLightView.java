@@ -35,8 +35,12 @@ public class HightLightView extends FrameLayout
 //    private boolean isBlur = true;
     private int maskColor = 0xCC000000;
 
+    // added by isanwenyu@163.com
+    private final boolean isNext;//next模式标志
+    private int mPosition=-1;//当前显示的提示布局位置
+    private HighLight.ViewPosInfo mViewPosInfo;//当前显示的高亮布局位置信息
 
-    public HightLightView(Context context, HighLight highLight, int maskColor, List<HighLight.ViewPosInfo> viewRects)
+    public HightLightView(Context context, HighLight highLight, int maskColor, List<HighLight.ViewPosInfo> viewRects,boolean isNext)
     {
         super(context);
         mHighLight = highLight;
@@ -44,6 +48,7 @@ public class HightLightView extends FrameLayout
         mViewRects = viewRects;
         this.maskColor = maskColor;
 //        this.isBlur = isBlur;
+        this.isNext=isNext;
         setWillNotDraw(false);
         init();
     }
@@ -64,37 +69,87 @@ public class HightLightView extends FrameLayout
 
     private void addViewForTip()
     {
-        for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
+        if (isNext)
         {
-            View view = mInflater.inflate(viewPosInfo.layoutId, this, false);
-            FrameLayout.LayoutParams lp = buildTipLayoutParams(view, viewPosInfo);
+            //校验mPosition
+            if (mPosition < -1 || mPosition > mViewRects.size() - 1)
+            {
+                //重置位置
+                mPosition = 0;
+            } else if (mPosition == mViewRects.size() - 1)
+            {
+                //移除当前布局
+                mHighLight.remove();
+            } else
+            {
+                //mPosition++
+                mPosition++;
+                mViewPosInfo = mViewRects.get(mPosition);
+            }
+            //移除所有tip再添加当前位置的tip布局
+            removeAllTips();
+            addViewForEveryTip(mViewPosInfo);
+        } else
+        {
+            for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
+            {
+                addViewForEveryTip(viewPosInfo);
+            }
+        }
+    }
 
-            if (lp == null) continue;
+    /**
+     * 移除当前高亮布局的所有提示布局
+     *
+     */
+    private void removeAllTips() {
+        removeAllViews();
+    }
 
-            lp.leftMargin = (int) viewPosInfo.marginInfo.leftMargin;
-            lp.topMargin = (int) viewPosInfo.marginInfo.topMargin;
-            lp.rightMargin = (int) viewPosInfo.marginInfo.rightMargin;
-            lp.bottomMargin = (int) viewPosInfo.marginInfo.bottomMargin;
+    /**
+     * 添加每个高亮布局
+     * @param viewPosInfo 高亮布局信息
+     * @author isanwenyu@163.com
+     */
+    private void addViewForEveryTip(HighLight.ViewPosInfo viewPosInfo)
+    {
+        View view = mInflater.inflate(viewPosInfo.layoutId, this, false);
+        LayoutParams lp = buildTipLayoutParams(view, viewPosInfo);
 
-            //fix the bug can't set gravity  LEFT|BOTTOM  or RIGHT|TOP
+        if (lp == null) return;
+
+        lp.leftMargin = (int) viewPosInfo.marginInfo.leftMargin;
+        lp.topMargin = (int) viewPosInfo.marginInfo.topMargin;
+        lp.rightMargin = (int) viewPosInfo.marginInfo.rightMargin;
+        lp.bottomMargin = (int) viewPosInfo.marginInfo.bottomMargin;
+
+        //fix the bug can't set gravity  LEFT|BOTTOM  or RIGHT|TOP
 //            if (lp.leftMargin == 0 && lp.topMargin == 0)
 //            {
 //                lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
 //            }
 
-            if(lp.rightMargin != 0){
-                lp.gravity = Gravity.RIGHT;
-            }else {
-                lp.gravity = Gravity.LEFT;
-            }
-
-            if(lp.bottomMargin != 0){
-                lp.gravity |= Gravity.BOTTOM;
-            }else {
-                lp.gravity |= Gravity.TOP;
-            }
-            addView(view, lp);
+        if(lp.rightMargin != 0){
+            lp.gravity = Gravity.RIGHT;
+        }else {
+            lp.gravity = Gravity.LEFT;
         }
+
+        if(lp.bottomMargin != 0){
+            lp.gravity |= Gravity.BOTTOM;
+        }else {
+            lp.gravity |= Gravity.TOP;
+        }
+        addView(view, lp);
+    }
+
+    /**
+     * 切换下个提示布局
+     * @author isanwenyu@16.com
+     */
+    public void next()
+    {
+         if(isNext) addViewForTip();
     }
 
     private void buildMask()
@@ -105,10 +160,29 @@ public class HightLightView extends FrameLayout
         mPaint.setXfermode(MODE_DST_OUT);
         mHighLight.updateInfo();
         mLightBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        for (HighLight.ViewPosInfo viewPosInfo : mViewRects) {
-            viewPosInfo.lightShape.shape(mLightBitmap,viewPosInfo);
+
+        if(isNext)//如果是next模式添加每个提示布局的背景形状
+        {
+            //添加当前提示布局的高亮形状背景
+            addViewEveryTipShape(mViewPosInfo);
+        }else
+        {
+            for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
+            {
+                addViewEveryTipShape(viewPosInfo);
+            }
         }
         canvas.drawBitmap(mLightBitmap,0,0,mPaint);
+    }
+
+    /**
+     * 添加提示布局的背景形状
+     * @param viewPosInfo //提示布局的位置信息
+     * @author isanwenyu@16.com
+     */
+    private void addViewEveryTipShape(HighLight.ViewPosInfo viewPosInfo)
+    {
+        viewPosInfo.lightShape.shape(mLightBitmap,viewPosInfo);
     }
 
     @Override
@@ -128,7 +202,7 @@ public class HightLightView extends FrameLayout
     protected void onLayout(boolean changed, int left, int top, int right, int bottom)
     {
         super.onLayout(changed, left, top, right, bottom);
-        if (changed)
+//        if (changed) edited by isanwenyu@163.com for next mode
         {
             buildMask();
             updateTipPos();
@@ -138,14 +212,25 @@ public class HightLightView extends FrameLayout
 
     private void updateTipPos()
     {
-        for (int i = 0, n = getChildCount(); i < n; i++)
+        if (isNext)//如果是next模式 只有一个子控件 刷新当前位置tip
         {
-            View view = getChildAt(i);
-            HighLight.ViewPosInfo viewPosInfo = mViewRects.get(i);
+            View view = getChildAt(0);
 
-            LayoutParams lp = buildTipLayoutParams(view, viewPosInfo);
-            if (lp == null) continue;
+            LayoutParams lp = buildTipLayoutParams(view, mViewPosInfo);
+            if (lp == null) return;
             view.setLayoutParams(lp);
+
+        }else
+        {
+            for (int i = 0, n = getChildCount(); i < n; i++)
+            {
+                View view = getChildAt(i);
+                HighLight.ViewPosInfo viewPosInfo = mViewRects.get(i);
+
+                LayoutParams lp = buildTipLayoutParams(view, viewPosInfo);
+                if (lp == null) continue;
+                view.setLayoutParams(lp);
+            }
         }
     }
 
