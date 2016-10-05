@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity
     {
         mHightLight = new HighLight(MainActivity.this)//
                 .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
-                .intercept(false)
-                .enableNext()
+                .intercept(false)//设置拦截属性为false 高亮布局不影响后面布局的滑动效果
+                .enableNext()//开启next模式并通过show方法显示 然后通过调用next()方法切换到下一个提示布局，直到移除自身
 //                .setClickCallback(new HighLight.OnClickCallback() {
 //                    @Override
 //                    public void onClick() {
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void clickKnown(View view)
     {
-        if(mHightLight.isNext())
+        if(mHightLight.isNext())//如果开启next模式
         {
             mHightLight.next();
         }else

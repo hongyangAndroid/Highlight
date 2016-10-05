@@ -6,6 +6,8 @@
 
 ## 效果图
 
+竖屏：
+
 <img src="high_light_demo.gif" width="320px"/>
 
 横屏：
@@ -31,6 +33,65 @@ dependencies {
 ```
 
 ## 用法
+
+### next mode 下一步模式
+> enable next mode and invoke show() method then invoke next() method in HighLight to display tip view in order till remove itself
+> 开启next模式并显示，然后调用next()方法显示下一个提示布局 直到删除自己
+
+#### 1. 开启next模式并显示
+
+
+```
+/**
+     * 显示 next模式 我知道了提示高亮布局
+     * @param view id为R.id.iv_known的控件
+     */
+    public  void showNextKnownTipView(View view)
+    {
+        mHightLight = new HighLight(MainActivity.this)//
+                .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
+                .intercept(false)//设置拦截属性为false 高亮布局不影响后面布局的滑动效果
+                .enableNext() //开启next模式并通过show方法显示 然后通过调用next()方法切换到下一个提示布局，直到移除自身
+//                .setClickCallback(new HighLight.OnClickCallback() {
+//                    @Override
+//                    public void onClick() {
+//                        Toast.makeText(MainActivity.this, "clicked and remove HightLight view by yourself", Toast.LENGTH_SHORT).show();
+//                        remove(null);
+//                    }
+//                })
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape())
+                .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape());
+        mHightLight.show();
+    }
+    
+```
+
+#### 2. 调用next()方法依次显示之前添加到提示布局 最后自动移除
+```
+/**
+     * 响应所有R.id.iv_known的控件的点击事件
+     * <p>
+     *  移除高亮布局
+     * </p>
+     *
+     * @param view
+     */
+    public void clickKnown(View view)
+    {
+        if(mHightLight.isNext())//如果开启next模式
+        {
+            mHightLight.next();
+        }else
+        {
+            remove(null);
+        }
+    }
+```
+
+### nomarl mode 普通模式
 
 对于上面效果图中的一个需要高亮的View，需要通过下面的代码
 
