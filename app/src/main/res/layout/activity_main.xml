@@ -7,21 +7,46 @@
         >
 
         <Button
+            android:id="@+id/btn_show_known_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showKnownTipView"
-            android:layout_margin="30dp"
+            android:layout_margin="10dp"
             android:layout_alignParentLeft="true"
             android:text="showKnownTip" />
+        <Button
+            android:id="@+id/btn_show_next_known_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showNextKnownTipView"
+            android:layout_margin="10dp"
+            android:layout_alignParentLeft="true"
+            android:text="showNextKnownTip"
+            android:layout_below="@id/btn_show_known_tip"/>
 
         <Button
+            android:id="@+id/btn_show_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showTipView"
-            android:layout_margin="30dp"
+            android:layout_margin="10dp"
             android:layout_alignParentRight="true"
             android:text="showTip" />
+        <Button
+            android:id="@+id/btn_show_next_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showNextTipView"
+            android:layout_margin="10dp"
+            android:layout_alignParentRight="true"
+            android:text="showNextTip"
+            android:layout_below="@id/btn_show_tip"/>
 
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:entries="@array/entities"
+            android:layout_below="@id/btn_show_next_known_tip"/>
         <Button
             android:id="@+id/btn_light"
             android:layout_marginTop="200dp"

@@ -62,7 +62,10 @@ public class HighLight
     private boolean intercept = true;
 //    private boolean shadow = true;
     private int maskColor = 0xCC000000;
+
+    //added by isanwenyu@163.com
     private boolean autoRemove = true;//点击是否自动移除 默认为true
+    private boolean next = false;//next模式标志 默认为false
 
     public HighLight(Context context)
     {
@@ -152,10 +155,10 @@ public class HighLight
 
     /**
      * 点击后是否自动移除
-     *
      * @see #show()
      * @see #remove()
      * @return 链式接口 返回自身
+     * @author isanwenyu@163.com
      */
     public HighLight autoRemove(boolean autoRemove)
     {
@@ -165,24 +168,69 @@ public class HighLight
 
     /**
      * 获取高亮布局 如果要获取decorLayout中布局请在{@link #show()}后调用
-     * @return 返回高亮布局
+     * <p>
+     * 高亮布局的id在{@link #show()}中hightLightView.setId(R.id.high_light_view)设置
+     * @return 返回id为R.id.high_light_view的高亮布局对象
+     * @see #show()
+     * @author isanwenyu@163.com
      */
     public HightLightView getHightLightView()
     {
-        return mHightLightView;
+        if (mHightLightView != null) return mHightLightView;
+        if (((Activity)mContext).findViewById(R.id.high_light_view) != null)
+            return  mHightLightView= (HightLightView) ((Activity)mContext).findViewById(R.id.high_light_view);
+        else
+            return null;
+    }
+
+    /**
+     * 开启next模式
+     * @see #show()
+     * @return 链式接口 返回自身
+     * @author isanwenyu@163.com
+     */
+    public HighLight enableNext()
+    {
+        this.next=true;
+        return this;
+    }
+
+    /**
+     * 返回是否是next模式
+     *
+     * @return
+     * @author isanwenyu@163.com
+     */
+    public boolean isNext() {
+        return next;
+    }
+
+    /**
+     * 切换到下个提示布局
+     * @return HighLight自身对象
+     * @author isanwenyu@163.com
+     */
+    public HighLight next() {
+        if (getHightLightView() != null) getHightLightView().next();
+        return this;
     }
 
     public void show()
     {
 
-        if (mHightLightView != null) return;
-
-        HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects);
-        if (mAnchor.getClass().getSimpleName().equals("FrameLayout"))
+        if (getHightLightView() != null)
         {
-            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
-                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
+            mHightLightView= getHightLightView();
+        }else
+        {
+
+            HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects,next);
+            //add high light view unique id by isanwenyu@163.com  on 2016/9/28.
+            hightLightView.setId(R.id.high_light_view);
+            if (mAnchor.getClass().getSimpleName().equals("FrameLayout")) {
+                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
+                        (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
 
         } else
         {
@@ -214,7 +262,8 @@ public class HighLight
             });
         }
 
-        mHightLightView = hightLightView;
+            mHightLightView = hightLightView;
+        }
     }
 
     public void remove()
