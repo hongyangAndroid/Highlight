@@ -80,12 +80,13 @@ public class HightLightView extends FrameLayout
             {
                 //移除当前布局
                 mHighLight.remove();
+                return;
             } else
             {
                 //mPosition++
                 mPosition++;
-                mViewPosInfo = mViewRects.get(mPosition);
             }
+            mViewPosInfo = mViewRects.get(mPosition);
             //移除所有tip再添加当前位置的tip布局
             removeAllTips();
             addViewForEveryTip(mViewPosInfo);

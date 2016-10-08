@@ -212,6 +212,7 @@ public class HighLight
      */
     public HighLight next() {
         if (getHightLightView() != null) getHightLightView().next();
+        else throw new NullPointerException("The HightLightView is null,you must invoke show() before this!");
         return this;
     }
 
@@ -232,18 +233,18 @@ public class HighLight
                         (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
 
-        } else
-        {
-            FrameLayout frameLayout = new FrameLayout(mContext);
-            ViewGroup parent = (ViewGroup) mAnchor.getParent();
-            parent.removeView(mAnchor);
-            parent.addView(frameLayout, mAnchor.getLayoutParams());
-            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
-                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            frameLayout.addView(mAnchor, lp);
+            } else
+            {
+                FrameLayout frameLayout = new FrameLayout(mContext);
+                ViewGroup parent = (ViewGroup) mAnchor.getParent();
+                parent.removeView(mAnchor);
+                parent.addView(frameLayout, mAnchor.getLayoutParams());
+                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
+                        (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                frameLayout.addView(mAnchor, lp);
 
-            frameLayout.addView(hightLightView);
-        }
+                frameLayout.addView(hightLightView);
+            }
 
         if (intercept)
         {
