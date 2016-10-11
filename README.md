@@ -29,7 +29,7 @@ dependencies {
 或者
 
 ```
-  compile 'com.zhy:highlight:1.1.0'
+    compile 'com.isanwenyu.highlight:highlight:1.3.1'
 ```
 
 ## 用法
