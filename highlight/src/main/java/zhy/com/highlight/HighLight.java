@@ -126,16 +126,18 @@ public class HighLight
 
     public HighLight addHighLight(View view, int decorLayoutId, OnPosCallback onPosCallback,LightShape lightShape)
     {
-        ViewGroup parent = (ViewGroup) mAnchor;
-        RectF rect = new RectF(ViewUtils.getLocationInView(parent, view));
-        ViewPosInfo viewPosInfo = new ViewPosInfo();
-        viewPosInfo.layoutId = decorLayoutId;
-        viewPosInfo.rectF = rect;
-        viewPosInfo.view = view;
         if (onPosCallback == null && decorLayoutId != -1)
         {
             throw new IllegalArgumentException("onPosCallback can not be null.");
         }
+        ViewGroup parent = (ViewGroup) mAnchor;
+        RectF rect = new RectF(ViewUtils.getLocationInView(parent, view));
+        //if RectF is empty return  added by zhuyuanbao 2016/10/26.
+        if(rect.isEmpty()) return this;
+        ViewPosInfo viewPosInfo = new ViewPosInfo();
+        viewPosInfo.layoutId = decorLayoutId;
+        viewPosInfo.rectF = rect;
+        viewPosInfo.view = view;
         MarginInfo marginInfo = new MarginInfo();
         onPosCallback.getPos(parent.getWidth() - rect.right, parent.getHeight() - rect.bottom, rect, marginInfo);
         viewPosInfo.marginInfo = marginInfo;
@@ -223,8 +225,8 @@ public class HighLight
         {
             mHightLightView= getHightLightView();
         }else
-        {
-
+        {   //如果View rect 容器为空 直接返回 added by zhuyuanbao 2016/10/26.
+            if(mViewRects.isEmpty()) return;
             HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects,next);
             //add high light view unique id by isanwenyu@163.com  on 2016/9/28.
             hightLightView.setId(R.id.high_light_view);
