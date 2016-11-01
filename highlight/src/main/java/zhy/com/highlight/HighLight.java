@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import zhy.com.highlight.interfaces.HighLightInterface;
 import zhy.com.highlight.shape.RectLightShape;
 import zhy.com.highlight.util.ViewUtils;
 import zhy.com.highlight.view.HightLightView;
@@ -19,7 +20,7 @@ import zhy.com.highlight.view.HightLightView;
 /**
  * Created by zhy on 15/10/8.
  */
-public class HighLight
+public class HighLight implements HighLightInterface
 {
     public static class ViewPosInfo
     {
@@ -47,17 +48,12 @@ public class HighLight
         void getPos(float rightMargin, float bottomMargin, RectF rectF, MarginInfo marginInfo);
     }
 
-    public static interface OnClickCallback
-    {
-        void onClick();
-    }
-
 
     private View mAnchor;
     private List<ViewPosInfo> mViewRects;
     private Context mContext;
     private HightLightView mHightLightView;
-    private OnClickCallback clickCallback;
+    private HighLightInterface.OnClickCallback clickCallback;
 
     private boolean intercept = true;
 //    private boolean shadow = true;
@@ -66,6 +62,8 @@ public class HighLight
     //added by isanwenyu@163.com
     private boolean autoRemove = true;//点击是否自动移除 默认为true
     private boolean next = false;//next模式标志 默认为false
+    private HighLightInterface.OnShowCallback mOnShowCallback;//显示回调对象
+    private HighLightInterface.OnRemoveCallback mOnRemoveCallback;//移除回调对象
 
     public HighLight(Context context)
     {
@@ -132,7 +130,7 @@ public class HighLight
         }
         ViewGroup parent = (ViewGroup) mAnchor;
         RectF rect = new RectF(ViewUtils.getLocationInView(parent, view));
-        //if RectF is empty return  added by zhuyuanbao 2016/10/26.
+        //if RectF is empty return  added by isanwenyu 2016/10/26.
         if(rect.isEmpty()) return this;
         ViewPosInfo viewPosInfo = new ViewPosInfo();
         viewPosInfo.layoutId = decorLayoutId;
@@ -150,8 +148,17 @@ public class HighLight
 
     // 一个场景可能有多个步骤的高亮。一个步骤完成之后再进行下一个步骤的高亮
     // 添加点击事件，将每次点击传给应用逻辑
-    public HighLight setClickCallback(OnClickCallback clickCallback){
+    public HighLight setClickCallback(HighLightInterface.OnClickCallback clickCallback){
         this.clickCallback = clickCallback;
+        return this;
+    }
+
+    public HighLight setOnShowCallback(HighLightInterface.OnShowCallback mOnShowCallback) {
+        this.mOnShowCallback = mOnShowCallback;
+        return this;
+    }
+    public HighLight setOnRemoveCallback(HighLightInterface.OnRemoveCallback mOnRemoveCallback) {
+        this.mOnRemoveCallback = mOnRemoveCallback;
         return this;
     }
 
@@ -218,6 +225,7 @@ public class HighLight
         return this;
     }
 
+    @Override
     public void show()
     {
 
@@ -225,7 +233,7 @@ public class HighLight
         {
             mHightLightView= getHightLightView();
         }else
-        {   //如果View rect 容器为空 直接返回 added by zhuyuanbao 2016/10/26.
+        {   //如果View rect 容器为空 直接返回 added by isanwenyu 2016/10/26.
             if(mViewRects.isEmpty()) return;
             HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects,next);
             //add high light view unique id by isanwenyu@163.com  on 2016/9/28.
@@ -248,27 +256,32 @@ public class HighLight
                 frameLayout.addView(hightLightView);
             }
 
-        if (intercept)
-        {
-            hightLightView.setOnClickListener(new View.OnClickListener()
+            if (intercept)
             {
-                @Override
-                public void onClick(View v)
+                hightLightView.setOnClickListener(new View.OnClickListener()
                 {
-                    //added autoRemove by isanwenyu@163.com
-                    if (autoRemove)  remove();
+                    @Override
+                    public void onClick(View v)
+                    {
+                        //added autoRemove by isanwenyu@163.com
+                        if (autoRemove)  remove();
 
-                    if(clickCallback != null){
-                        clickCallback.onClick();
+                        if(clickCallback != null){
+                            clickCallback.onClick();
+                        }
                     }
+                });
+                //如果拦截才响应显示回调
+                if (mOnShowCallback != null) {
+                    mOnShowCallback.onShow();
                 }
-            });
-        }
+            }
 
             mHightLightView = hightLightView;
+
         }
     }
-
+    @Override
     public void remove()
     {
         if (mHightLightView == null) return;
@@ -285,6 +298,13 @@ public class HighLight
             graParent.addView(origin, parent.getLayoutParams());
         }
         mHightLightView = null;
+
+        if (intercept)
+        {   //如果拦截才响应移除回调
+            if (mOnRemoveCallback != null) {
+                mOnRemoveCallback.onRemove();
+            }
+        }
     }
 
 
