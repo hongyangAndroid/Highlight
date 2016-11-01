@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -62,14 +64,22 @@ public class HighLight implements HighLightInterface
     //added by isanwenyu@163.com
     private boolean autoRemove = true;//点击是否自动移除 默认为true
     private boolean next = false;//next模式标志 默认为false
-    private HighLightInterface.OnShowCallback mOnShowCallback;//显示回调对象
-    private HighLightInterface.OnRemoveCallback mOnRemoveCallback;//移除回调对象
+    private boolean mShowing;//是否显示
+    private Message mShowMessage;
+    private Message mRemoveMessage;
+    private Message mClickMessage;
+    private ListenersHandler mListenersHandler;
+
+    private static final int CLICK = 0x40;
+    private static final int REMOVE = 0x41;
+    private static final int SHOW = 0x42;
 
     public HighLight(Context context)
     {
         mContext = context;
         mViewRects = new ArrayList<ViewPosInfo>();
         mAnchor = ((Activity) mContext).findViewById(android.R.id.content);
+        mListenersHandler = new ListenersHandler();
     }
 
     public HighLight anchor(View anchor)
@@ -149,17 +159,37 @@ public class HighLight implements HighLightInterface
     // 一个场景可能有多个步骤的高亮。一个步骤完成之后再进行下一个步骤的高亮
     // 添加点击事件，将每次点击传给应用逻辑
     public HighLight setClickCallback(HighLightInterface.OnClickCallback clickCallback){
-        this.clickCallback = clickCallback;
+        if (clickCallback != null) {
+            mClickMessage = mListenersHandler.obtainMessage(CLICK, clickCallback);
+        } else {
+            mClickMessage = null;
+        }
         return this;
     }
 
-    public HighLight setOnShowCallback(HighLightInterface.OnShowCallback mOnShowCallback) {
-        this.mOnShowCallback = mOnShowCallback;
+    public HighLight setOnShowCallback(HighLightInterface.OnShowCallback onShowCallback) {
+        if (onShowCallback != null) {
+            mShowMessage = mListenersHandler.obtainMessage(SHOW, onShowCallback);
+        } else {
+            mShowMessage = null;
+        }
         return this;
     }
-    public HighLight setOnRemoveCallback(HighLightInterface.OnRemoveCallback mOnRemoveCallback) {
-        this.mOnRemoveCallback = mOnRemoveCallback;
+    public HighLight setOnRemoveCallback(HighLightInterface.OnRemoveCallback onRemoveCallback) {
+        if (onRemoveCallback != null) {
+            mRemoveMessage = mListenersHandler.obtainMessage(REMOVE, onRemoveCallback);
+        } else {
+            mRemoveMessage = null;
+        }
         return this;
+    }
+
+    /**
+     * @return Whether the dialog is currently showing.
+     * @author isanwenyu@163.com
+     */
+    public boolean isShowing() {
+        return mShowing;
     }
 
     /**
@@ -229,9 +259,10 @@ public class HighLight implements HighLightInterface
     public void show()
     {
 
-        if (getHightLightView() != null)
+        if (isShowing()&&getHightLightView() != null)
         {
             mHightLightView= getHightLightView();
+            return;
         }else
         {   //如果View rect 容器为空 直接返回 added by isanwenyu 2016/10/26.
             if(mViewRects.isEmpty()) return;
@@ -266,25 +297,22 @@ public class HighLight implements HighLightInterface
                         //added autoRemove by isanwenyu@163.com
                         if (autoRemove)  remove();
 
-                        if(clickCallback != null){
-                            clickCallback.onClick();
-                        }
+                        sendClickMessage();
                     }
                 });
                 //如果拦截才响应显示回调
-                if (mOnShowCallback != null) {
-                    mOnShowCallback.onShow();
-                }
+                sendShowMessage();
             }
 
             mHightLightView = hightLightView;
+            mShowing = true;
 
         }
     }
     @Override
     public void remove()
     {
-        if (mHightLightView == null) return;
+        if (mHightLightView == null || !mShowing) return;
         ViewGroup parent = (ViewGroup) mHightLightView.getParent();
         if (parent instanceof RelativeLayout || parent instanceof FrameLayout)
         {
@@ -298,14 +326,52 @@ public class HighLight implements HighLightInterface
             graParent.addView(origin, parent.getLayoutParams());
         }
         mHightLightView = null;
-
         if (intercept)
         {   //如果拦截才响应移除回调
-            if (mOnRemoveCallback != null) {
-                mOnRemoveCallback.onRemove();
-            }
+           sendRemoveMessage();
         }
+        mShowing = false;
     }
 
 
+    private void sendClickMessage() {
+        if (mClickMessage != null) {
+            // Obtain a new message so this dialog can be re-used
+            Message.obtain(mClickMessage).sendToTarget();
+        }
+    }
+    private void sendRemoveMessage() {
+        if (mRemoveMessage != null) {
+            // Obtain a new message so this dialog can be re-used
+            Message.obtain(mRemoveMessage).sendToTarget();
+        }
+    }
+
+    private void sendShowMessage() {
+        if (mShowMessage != null) {
+            // Obtain a new message so this dialog can be re-used
+            Message.obtain(mShowMessage).sendToTarget();
+        }
+    }
+
+    /**
+     * @see android.app.Dialog.ListenersHandler
+     */
+    private static final class ListenersHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case CLICK:
+                    ((HighLightInterface.OnClickCallback) msg.obj).onClick();
+                    break;
+                case REMOVE:
+                    ((HighLightInterface.OnRemoveCallback) msg.obj).onRemove();
+                    break;
+                case SHOW:
+                    ((HighLightInterface.OnShowCallback) msg.obj).onShow();
+                    break;
+            }
+        }
+    }
 }
