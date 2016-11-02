@@ -269,7 +269,8 @@ public class HighLight implements HighLightInterface
             HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects,next);
             //add high light view unique id by isanwenyu@163.com  on 2016/9/28.
             hightLightView.setId(R.id.high_light_view);
-            if (mAnchor.getClass().getSimpleName().equals("FrameLayout")) {
+            //compatible with AutoFrameLayout ect.
+            if (mAnchor instanceof FrameLayout) {
                 ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
                         (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
