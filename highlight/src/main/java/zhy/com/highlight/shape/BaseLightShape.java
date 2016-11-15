@@ -14,15 +14,31 @@ import zhy.com.highlight.view.HightLightView;
  * </pre>
  */
 public abstract class BaseLightShape implements HighLight.LightShape{
-    protected float dx;
-    protected float dy;
+    protected float dx;//水平方向偏移
+    protected float dy;//垂直方向偏移
+    protected float blurRadius=15;//模糊半径 默认15
 
     public BaseLightShape() {
     }
 
+    /**
+     * @param dx 水平方向偏移
+     * @param dy 垂直方向偏移
+     */
     public BaseLightShape(float dx,float dy) {
         this.dx = dx;
         this.dy = dy;
+    }
+
+    /**
+     * @param dx 水平方向偏移
+     * @param dy 垂直方向偏移
+     * @param blurRadius 模糊半径 必须大于0
+     */
+    public BaseLightShape(float dx, float dy, float blurRadius) {
+        this.dx = dx;
+        this.dy = dy;
+        this.blurRadius = blurRadius;
     }
 
     @Override
