@@ -21,6 +21,7 @@ import zhy.com.highlight.position.OnRightPosCallback;
 import zhy.com.highlight.position.OnTopPosCallback;
 import zhy.com.highlight.shape.BaseLightShape;
 import zhy.com.highlight.shape.CircleLightShape;
+import zhy.com.highlight.shape.OvalLightShape;
 import zhy.com.highlight.shape.RectLightShape;
 
 public class MainActivity extends AppCompatActivity
@@ -101,9 +102,9 @@ public class MainActivity extends AppCompatActivity
                 })
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
                 .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
-                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape())
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape(0,0,0))
                 .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
-                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape());
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new OvalLightShape(5,5,20));
         mHightLight.show();
 
 //        //added by isanwenyu@163.com 设置监听器只有最后一个添加到HightLightView的knownView响应了事件
@@ -140,11 +141,11 @@ public class MainActivity extends AppCompatActivity
 //                })
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
                 .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
-                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new BaseLightShape(5,5) {
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new BaseLightShape(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5,getResources().getDisplayMetrics()), TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5,getResources().getDisplayMetrics()),0) {
                     @Override
                     protected void resetRectF4Shape(RectF viewPosInfoRectF, float dx, float dy) {
                         //缩小高亮控件范围
-                        viewPosInfoRectF.inset(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dx,getResources().getDisplayMetrics()), TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dy,getResources().getDisplayMetrics()));
+                        viewPosInfoRectF.inset(dx,dy);
                     }
 
                     @Override
@@ -154,13 +155,16 @@ public class MainActivity extends AppCompatActivity
                         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                         paint.setDither(true);
                         paint.setAntiAlias(true);
-                        paint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
+                        //blurRadius必须大于0
+                        if(blurRadius>0){
+                            paint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.SOLID));
+                        }
                         RectF rectF = viewPosInfo.rectF;
                         canvas.drawOval(rectF, paint);
                     }
                 })
                 .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
-                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape())
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new OvalLightShape(5,5,20))
                 .setOnRemoveCallback(new HighLightInterface.OnRemoveCallback() {//监听移除回调 intercept为true时生效
                     @Override
                     public void onRemove() {

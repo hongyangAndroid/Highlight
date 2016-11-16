@@ -30,7 +30,7 @@ dependencies {
 或者
 
 ```
-    compile 'com.isanwenyu.highlight:highlight:1.5.1'
+    compile 'com.isanwenyu.highlight:highlight:1.6.0'
 ```
 再或者
 
@@ -38,7 +38,7 @@ dependencies {
 <dependency>
   <groupId>com.isanwenyu.highlight</groupId>
   <artifactId>highlight</artifactId>
-  <version>1.5.1</version>
+  <version>1.6.0</version>
   <type>pom</type>
 </dependency>
 
@@ -53,7 +53,6 @@ dependencies {
 
 
 ```
-   
     /**
      * 显示 next模式 我知道了提示高亮布局
      * @param view id为R.id.iv_known的控件
@@ -75,11 +74,11 @@ dependencies {
 //                })
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
                 .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
-                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new BaseLightShape(5,5) {
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new BaseLightShape(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5,getResources().getDisplayMetrics()), TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5,getResources().getDisplayMetrics()),0) {
                     @Override
                     protected void resetRectF4Shape(RectF viewPosInfoRectF, float dx, float dy) {
                         //缩小高亮控件范围
-                        viewPosInfoRectF.inset(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dx,getResources().getDisplayMetrics()), TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dy,getResources().getDisplayMetrics()));
+                        viewPosInfoRectF.inset(dx,dy);
                     }
 
                     @Override
@@ -89,13 +88,16 @@ dependencies {
                         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                         paint.setDither(true);
                         paint.setAntiAlias(true);
-                        paint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
+                        //blurRadius必须大于0
+                        if(blurRadius>0){
+                            paint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.SOLID));
+                        }
                         RectF rectF = viewPosInfo.rectF;
                         canvas.drawOval(rectF, paint);
                     }
                 })
                 .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
-                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape())
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new OvalLightShape(5,5,20))
                 .setOnRemoveCallback(new HighLightInterface.OnRemoveCallback() {//监听移除回调 intercept为true时生效
                     @Override
                     public void onRemove() {
@@ -140,27 +142,28 @@ dependencies {
 对于上面效果图中的一个需要高亮的View，需要通过下面的代码
 
 ```
-/**
+    /**
      * 显示我知道了提示高亮布局
      * @param view id为R.id.iv_known的控件
+     * @author isanwenyu@163.com
      */
     public  void showKnownTipView(View view)
     {
         mHightLight = new HighLight(MainActivity.this)//
-                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
                 .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
-//                .setClickCallback(new HighLight.OnClickCallback() {
-//                    @Override
-//                    public void onClick() {
-//                        Toast.makeText(MainActivity.this, "clicked and remove HightLight view by yourself", Toast.LENGTH_SHORT).show();
-//                        remove(null);
-//                    }
-//                })
+                .intercept(false)//设置拦截属性为false 高亮布局不影响后面布局的滑动效果 而且使下方点击回调失效
+                .setClickCallback(new HighLight.OnClickCallback() {
+                    @Override
+                    public void onClick() {
+                        Toast.makeText(MainActivity.this, "clicked and remove HightLight view by yourself", Toast.LENGTH_SHORT).show();
+                        remove(null);
+                    }
+                })
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
                 .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
-                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape())
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape(0,0,0))
                 .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
-                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape());
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new OvalLightShape(5,5,20));
         mHightLight.show();
 
 //        //added by isanwenyu@163.com 设置监听器只有最后一个添加到HightLightView的knownView响应了事件
@@ -199,8 +202,37 @@ addHighLight包含3个参数：
 	目前看起来，我觉得位置信息够了，当然如果你有想法欢迎提出。
 	
 	哈，是不是参数比较多，看着烦，如果你图省事，可以提供一个枚举，提供4个或者8个默认的位置，这个事呢，dota1群`@李志云`已经完成~认识的话可以去找他。
-	
-	
+* 参数4：高亮形状  抽象类BaseLightShape(dx,dy,blurRadius)
+
+	```xml
+    /**
+     * @param dx 水平方向偏移
+     * @param dy 垂直方向偏移
+     * @param blurRadius 模糊半径 默认15px 0不模糊
+     */
+   ```
+   两个抽象方法：
+   
+   ```
+    /**
+     * reset RectF for Shape by dx and dy. 根据dx，dy重置viewPosInfoRectF大小
+     * @param viewPosInfoRectF
+     * @param dx
+     * @param dy
+     */
+    protected abstract void resetRectF4Shape(RectF viewPosInfoRectF, float dx, float dy);
+
+    /**
+     * draw shape into bitmap. 绘制高亮形状到传递过来的图片画布上
+     * @param bitmap
+     * @param viewPosInfo
+     * @see zhy.com.highlight.view.HightLightView#addViewForEveryTip(HighLight.ViewPosInfo)
+     * @see HightLightView#buildMask()
+     */
+    protected abstract void drawShape(Bitmap bitmap, HighLight.ViewPosInfo viewPosInfo);
+   ```
+   BaseLightShape的实现类：RectLightShape（矩形）、CircleLightShape（圆形）、OvalLightShape（椭圆），具体实现请查看代码
+   
 ## 致谢
 
 感谢android day day dota1群，苏苏，提供的图片资源。

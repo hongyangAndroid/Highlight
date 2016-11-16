@@ -276,4 +276,8 @@ public class HightLightView extends FrameLayout
         super.onDraw(canvas);
 
     }
+
+    public boolean isNext() {
+        return isNext;
+    }
 }

@@ -33,7 +33,7 @@ public abstract class BaseLightShape implements HighLight.LightShape{
     /**
      * @param dx 水平方向偏移
      * @param dy 垂直方向偏移
-     * @param blurRadius 模糊半径 必须大于0
+     * @param blurRadius 模糊半径 默认15px 0不模糊
      */
     public BaseLightShape(float dx, float dy, float blurRadius) {
         this.dx = dx;

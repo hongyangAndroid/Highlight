@@ -216,10 +216,8 @@ public class HighLight implements HighLightInterface
     public HightLightView getHightLightView()
     {
         if (mHightLightView != null) return mHightLightView;
-        if (((Activity)mContext).findViewById(R.id.high_light_view) != null)
-            return  mHightLightView= (HightLightView) ((Activity)mContext).findViewById(R.id.high_light_view);
-        else
-            return null;
+        return  mHightLightView= (HightLightView) ((Activity)mContext).findViewById(R.id.high_light_view);
+
     }
 
     /**
@@ -259,61 +257,64 @@ public class HighLight implements HighLightInterface
     public void show()
     {
 
-        if (isShowing()&&getHightLightView() != null)
+        if (getHightLightView() != null)
         {
             mHightLightView= getHightLightView();
+            //重置当前HighLight对象属性
+            mShowing=true;
+            next=mHightLightView.isNext();
+            // TODO: 2016/11/16 按需重置其他属性
             return;
-        }else
-        {   //如果View rect 容器为空 直接返回 added by isanwenyu 2016/10/26.
-            if(mViewRects.isEmpty()) return;
-            HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects,next);
-            //add high light view unique id by isanwenyu@163.com  on 2016/9/28.
-            hightLightView.setId(R.id.high_light_view);
-            //compatible with AutoFrameLayout ect.
-            if (mAnchor instanceof FrameLayout) {
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
-                        (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
-
-            } else
-            {
-                FrameLayout frameLayout = new FrameLayout(mContext);
-                ViewGroup parent = (ViewGroup) mAnchor.getParent();
-                parent.removeView(mAnchor);
-                parent.addView(frameLayout, mAnchor.getLayoutParams());
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
-                        (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                frameLayout.addView(mAnchor, lp);
-
-                frameLayout.addView(hightLightView);
-            }
-
-            if (intercept)
-            {
-                hightLightView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        //added autoRemove by isanwenyu@163.com
-                        if (autoRemove)  remove();
-
-                        sendClickMessage();
-                    }
-                });
-                //如果拦截才响应显示回调
-                sendShowMessage();
-            }
-
-            mHightLightView = hightLightView;
-            mShowing = true;
-
         }
+       //如果View rect 容器为空 直接返回 added by isanwenyu 2016/10/26.
+        if(mViewRects.isEmpty()) return;
+        HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects,next);
+        //add high light view unique id by isanwenyu@163.com  on 2016/9/28.
+        hightLightView.setId(R.id.high_light_view);
+        //compatible with AutoFrameLayout ect.
+        if (mAnchor instanceof FrameLayout) {
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
+                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ((ViewGroup) mAnchor).addView(hightLightView, ((ViewGroup) mAnchor).getChildCount(), lp);
+
+        } else
+        {
+            FrameLayout frameLayout = new FrameLayout(mContext);
+            ViewGroup parent = (ViewGroup) mAnchor.getParent();
+            parent.removeView(mAnchor);
+            parent.addView(frameLayout, mAnchor.getLayoutParams());
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams
+                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            frameLayout.addView(mAnchor, lp);
+
+            frameLayout.addView(hightLightView);
+        }
+
+        if (intercept)
+        {
+            hightLightView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    //added autoRemove by isanwenyu@163.com
+                    if (autoRemove)  remove();
+
+                    sendClickMessage();
+                }
+            });
+            //如果拦截才响应显示回调
+            sendShowMessage();
+        }
+
+        mHightLightView = hightLightView;
+        mShowing = true;
+
     }
     @Override
     public void remove()
     {
-        if (mHightLightView == null || !mShowing) return;
+        if (getHightLightView() == null) return;
         ViewGroup parent = (ViewGroup) mHightLightView.getParent();
         if (parent instanceof RelativeLayout || parent instanceof FrameLayout)
         {
