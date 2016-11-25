@@ -30,7 +30,7 @@ dependencies {
 或者
 
 ```
-    compile 'com.isanwenyu.highlight:highlight:1.6.0'
+    compile 'com.isanwenyu.highlight:highlight:1.7.0'
 ```
 再或者
 
@@ -38,7 +38,7 @@ dependencies {
 <dependency>
   <groupId>com.isanwenyu.highlight</groupId>
   <artifactId>highlight</artifactId>
-  <version>1.6.0</version>
+  <version>1.7.0</version>
   <type>pom</type>
 </dependency>
 
@@ -107,8 +107,15 @@ dependencies {
                 })
                 .setOnShowCallback(new HighLightInterface.OnShowCallback() {//监听显示回调 intercept为true时生效
                     @Override
-                    public void onShow() {
+                    public void onShow(HightLightView hightLightView) {
                         Toast.makeText(MainActivity.this, "The HightLight view has been shown", Toast.LENGTH_SHORT).show();
+                    }
+                }).setOnNextCallback(new HighLightInterface.OnNextCallback() {
+                    @Override
+                    public void onNext(HightLightView hightLightView, View targetView, View tipView) {
+
+                     // targetView 目标按钮 tipView添加的提示布局，可以直接找到'我知道了'按钮添加监听事件等处理
+                        Toast.makeText(MainActivity.this, "The HightLight show next TipView，targetViewID:"+(targetView==null?null:targetView.getId())+",tipViewID:"+(tipView==null?null:tipView.getId()), Toast.LENGTH_SHORT).show();
                     }
                 });
         mHightLight.show();

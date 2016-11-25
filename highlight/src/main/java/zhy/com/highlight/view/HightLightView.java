@@ -62,12 +62,9 @@ public class HightLightView extends FrameLayout
 //            mPaint.setMaskFilter(new BlurMaskFilter(DEFAULT_WIDTH_BLUR, BlurMaskFilter.Blur.SOLID));
         mPaint.setStyle(Paint.Style.FILL);
 
-        addViewForTip();
-
-
     }
 
-    private void addViewForTip()
+    public void addViewForTip()
     {
         if (isNext)
         {
@@ -90,6 +87,11 @@ public class HightLightView extends FrameLayout
             //移除所有tip再添加当前位置的tip布局
             removeAllTips();
             addViewForEveryTip(mViewPosInfo);
+
+            if (mHighLight != null) {
+                mHighLight.sendNextMessage();
+            }
+
         } else
         {
             for (HighLight.ViewPosInfo viewPosInfo : mViewRects)
@@ -115,6 +117,8 @@ public class HightLightView extends FrameLayout
     private void addViewForEveryTip(HighLight.ViewPosInfo viewPosInfo)
     {
         View view = mInflater.inflate(viewPosInfo.layoutId, this, false);
+        //设置id为layout id 供HighLight查找
+        view.setId(viewPosInfo.layoutId);
         LayoutParams lp = buildTipLayoutParams(view, viewPosInfo);
 
         if (lp == null) return;
@@ -142,15 +146,6 @@ public class HightLightView extends FrameLayout
             lp.gravity |= Gravity.TOP;
         }
         addView(view, lp);
-    }
-
-    /**
-     * 切换下个提示布局
-     * @author isanwenyu@16.com
-     */
-    public void next()
-    {
-         if(isNext) addViewForTip();
     }
 
     private void buildMask()
@@ -279,5 +274,12 @@ public class HightLightView extends FrameLayout
 
     public boolean isNext() {
         return isNext;
+    }
+
+    /**
+     * @return 当前高亮提示布局信息
+     */
+    public HighLight.ViewPosInfo getCurentViewPosInfo() {
+        return mViewPosInfo;
     }
 }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,29 +64,36 @@ public class HighLight implements HighLightInterface
 
     //added by isanwenyu@163.com
     private boolean autoRemove = true;//点击是否自动移除 默认为true
-    private boolean next = false;//next模式标志 默认为false
+    private boolean isNext = false;//next模式标志 默认为false
     private boolean mShowing;//是否显示
     private Message mShowMessage;
     private Message mRemoveMessage;
     private Message mClickMessage;
+    private Message mNextMessage;
     private ListenersHandler mListenersHandler;
 
     private static final int CLICK = 0x40;
     private static final int REMOVE = 0x41;
     private static final int SHOW = 0x42;
+    private static final int NEXT = 0x43;
 
     public HighLight(Context context)
     {
         mContext = context;
         mViewRects = new ArrayList<ViewPosInfo>();
         mAnchor = ((Activity) mContext).findViewById(android.R.id.content);
-        mListenersHandler = new ListenersHandler();
+        mListenersHandler = new ListenersHandler(this);
     }
 
     public HighLight anchor(View anchor)
     {
         mAnchor = anchor;
         return this;
+    }
+
+    @Override
+    public View getAnchor() {
+        return mAnchor;
     }
 
     public HighLight intercept(boolean intercept)
@@ -184,6 +192,15 @@ public class HighLight implements HighLightInterface
         return this;
     }
 
+    public HighLight setOnNextCallback(HighLightInterface.OnNextCallback onNextCallback) {
+        if (onNextCallback != null) {
+            mNextMessage = mListenersHandler.obtainMessage(NEXT, onNextCallback);
+        } else {
+            mNextMessage = null;
+        }
+        return this;
+    }
+
     /**
      * @return Whether the dialog is currently showing.
      * @author isanwenyu@163.com
@@ -213,6 +230,7 @@ public class HighLight implements HighLightInterface
      * @see #show()
      * @author isanwenyu@163.com
      */
+    @Override
     public HightLightView getHightLightView()
     {
         if (mHightLightView != null) return mHightLightView;
@@ -228,7 +246,7 @@ public class HighLight implements HighLightInterface
      */
     public HighLight enableNext()
     {
-        this.next=true;
+        this.isNext =true;
         return this;
     }
 
@@ -239,7 +257,7 @@ public class HighLight implements HighLightInterface
      * @author isanwenyu@163.com
      */
     public boolean isNext() {
-        return next;
+        return isNext;
     }
 
     /**
@@ -247,14 +265,15 @@ public class HighLight implements HighLightInterface
      * @return HighLight自身对象
      * @author isanwenyu@163.com
      */
+    @Override
     public HighLight next() {
-        if (getHightLightView() != null) getHightLightView().next();
+        if (getHightLightView() != null) getHightLightView().addViewForTip();
         else throw new NullPointerException("The HightLightView is null,you must invoke show() before this!");
         return this;
     }
 
     @Override
-    public void show()
+    public HighLight show()
     {
 
         if (getHightLightView() != null)
@@ -262,13 +281,13 @@ public class HighLight implements HighLightInterface
             mHightLightView= getHightLightView();
             //重置当前HighLight对象属性
             mShowing=true;
-            next=mHightLightView.isNext();
+            isNext =mHightLightView.isNext();
             // TODO: 2016/11/16 按需重置其他属性
-            return;
+            return this;
         }
        //如果View rect 容器为空 直接返回 added by isanwenyu 2016/10/26.
-        if(mViewRects.isEmpty()) return;
-        HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects,next);
+        if(mViewRects.isEmpty()) return this;
+        HightLightView hightLightView = new HightLightView(mContext, this, maskColor, mViewRects, isNext);
         //add high light view unique id by isanwenyu@163.com  on 2016/9/28.
         hightLightView.setId(R.id.high_light_view);
         //compatible with AutoFrameLayout ect.
@@ -306,15 +325,16 @@ public class HighLight implements HighLightInterface
             //如果拦截才响应显示回调
             sendShowMessage();
         }
-
+        //延迟添加提示布局
+        hightLightView.addViewForTip();
         mHightLightView = hightLightView;
         mShowing = true;
-
+        return this;
     }
     @Override
-    public void remove()
+    public HighLight remove()
     {
-        if (getHightLightView() == null) return;
+        if (getHightLightView() == null) return this;
         ViewGroup parent = (ViewGroup) mHightLightView.getParent();
         if (parent instanceof RelativeLayout || parent instanceof FrameLayout)
         {
@@ -333,6 +353,7 @@ public class HighLight implements HighLightInterface
            sendRemoveMessage();
         }
         mShowing = false;
+        return this;
     }
 
 
@@ -356,13 +377,36 @@ public class HighLight implements HighLightInterface
         }
     }
 
+    public void sendNextMessage() {
+
+        if(!isNext) throw new IllegalArgumentException("only for isNext mode,please invoke enableNext() first");
+
+        if (getHightLightView() == null) {
+            return;
+        }
+        //发送下一步消息事件
+       ViewPosInfo viewPosInfo= getHightLightView().getCurentViewPosInfo();
+        if (mNextMessage != null&&viewPosInfo!=null) {
+            mNextMessage.arg1=viewPosInfo.view==null?-1:viewPosInfo.view.getId();
+            mNextMessage.arg2=viewPosInfo.layoutId;
+            Message.obtain(mNextMessage).sendToTarget();
+        }
+    }
     /**
      * @see android.app.Dialog.ListenersHandler
      */
     private static final class ListenersHandler extends Handler {
+        private WeakReference<HighLightInterface> mHighLightInterface;
+        private HightLightView hightLightView;
+        private View anchorView;
 
+        public ListenersHandler(HighLight highLight) {
+            mHighLightInterface = new WeakReference<HighLightInterface>(highLight);
+        }
         @Override
         public void handleMessage(Message msg) {
+            hightLightView = mHighLightInterface.get() == null ? null : mHighLightInterface.get().getHightLightView();
+            anchorView = mHighLightInterface.get() == null ? null : mHighLightInterface.get().getAnchor();
             switch (msg.what) {
                 case CLICK:
                     ((HighLightInterface.OnClickCallback) msg.obj).onClick();
@@ -371,7 +415,12 @@ public class HighLight implements HighLightInterface
                     ((HighLightInterface.OnRemoveCallback) msg.obj).onRemove();
                     break;
                 case SHOW:
-                    ((HighLightInterface.OnShowCallback) msg.obj).onShow();
+                    ((HighLightInterface.OnShowCallback) msg.obj).onShow(hightLightView);
+                    break;
+                case NEXT:
+                    View targetView = anchorView != null ? anchorView.findViewById(msg.arg1) : null;
+                    View tipView = hightLightView != null ? hightLightView.findViewById(msg.arg2) : null;
+                    ((HighLightInterface.OnNextCallback) msg.obj).onNext(hightLightView, targetView, tipView);
                     break;
             }
         }
