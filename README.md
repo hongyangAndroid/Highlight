@@ -47,7 +47,7 @@ dependencies {
 
 ### Next Mode 下一步模式
 > Enable next mode and invoke show() method then invoke next() method in HighLight to display tip view in order till remove itself
-> 开启next模式并显示，然后调用next()方法显示下一个提示布局 直到删除自己
+> 调用`enableNext()`开启next模式并显示，然后调用next()方法显示下一个提示布局 直到删除自己
 
 #### 1. 开启next模式并显示
 
@@ -261,10 +261,10 @@ addHighLight包含3个参数：
 1. `A` 2016/9/26 添加点击高亮布局背景是否自动移除标志`autoRemove`
 2. `A` 2016/10/4 给`HighLightView`添加唯一id防止重复添加
 3. `A` 2016/10/5 添加Next模式-按顺序依次显示添加的提示布局
-2. `I` 2016/10/27 扩展高亮形状`LightShape`支持开发者自定义配置
-3. `A` 2016/11/01 为`HighLight`添加接口约束,显示与隐藏监听及`isShowing`属性
-4. `I` 2016/11/02 优化`HightLightView`中提示布局添加与显示
-5. `I` 2016/12/02 显示及移除回调不依赖`intercept`属性
+4. `I` 2016/10/27 扩展高亮形状`LightShape`支持开发者自定义配置
+5. `A` 2016/11/01 为`HighLight`添加接口约束,显示与隐藏监听及`isShowing`属性
+6. `I` 2016/11/02 优化`HightLightView`中提示布局添加与显示
+7. `I` 2016/12/02 显示及移除回调不依赖`intercept`属性
  
 ## 致谢
 

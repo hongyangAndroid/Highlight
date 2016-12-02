@@ -50,6 +50,14 @@ public class MainActivity extends AppCompatActivity
 //        );
 
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        //界面初始化后直接显示高亮布局
+//        if(hasFocus) mHightLight.show();
+    }
+
     public  void showTipView(View view){
         mHightLight = new HighLight(MainActivity.this)//
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
