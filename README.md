@@ -63,7 +63,7 @@ dependencies {
         mHightLight = new HighLight(MainActivity.this)//
                 .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
 //                .intercept(false)//设置拦截属性为false 高亮布局不影响后面布局的滑动效果
-                .intercept(true)//拦截属性默认为true 使下方callback生效
+                .intercept(true)//拦截属性默认为true 使下方ClickCallback生效
                 .enableNext()//开启next模式并通过show方法显示 然后通过调用next()方法切换到下一个提示布局，直到移除自身
 //                .setClickCallback(new HighLight.OnClickCallback() {
 //                    @Override
@@ -98,14 +98,14 @@ dependencies {
                 })
                 .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
                 .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new OvalLightShape(5,5,20))
-                .setOnRemoveCallback(new HighLightInterface.OnRemoveCallback() {//监听移除回调 intercept为true时生效
+                .setOnRemoveCallback(new HighLightInterface.OnRemoveCallback() {//监听移除回调 
                     @Override
                     public void onRemove() {
                         Toast.makeText(MainActivity.this, "The HightLight view has been removed", Toast.LENGTH_SHORT).show();
 
                     }
                 })
-                .setOnShowCallback(new HighLightInterface.OnShowCallback() {//监听显示回调 intercept为true时生效
+                .setOnShowCallback(new HighLightInterface.OnShowCallback() {//监听显示回调
                     @Override
                     public void onShow(HightLightView hightLightView) {
                         Toast.makeText(MainActivity.this, "The HightLight view has been shown", Toast.LENGTH_SHORT).show();
@@ -113,8 +113,7 @@ dependencies {
                 }).setOnNextCallback(new HighLightInterface.OnNextCallback() {
                     @Override
                     public void onNext(HightLightView hightLightView, View targetView, View tipView) {
-
-                     // targetView 目标按钮 tipView添加的提示布局，可以直接找到'我知道了'按钮添加监听事件等处理
+                        // targetView 目标按钮 tipView添加的提示布局 可以直接找到'我知道了'按钮添加监听事件等处理
                         Toast.makeText(MainActivity.this, "The HightLight show next TipView，targetViewID:"+(targetView==null?null:targetView.getId())+",tipViewID:"+(tipView==null?null:tipView.getId()), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -141,6 +140,23 @@ dependencies {
         {
             remove(null);
         }
+    }
+```
+#### 3. 下一步回调监听
+
+```
+    /**
+     * 下一个回调监听 只有Next模式下生效
+     */
+    public static interface OnNextCallback {
+        /**
+         * 监听下一步动作
+         *
+         * @param hightLightView 高亮布局控件
+         * @param targetView     高亮目标控件
+         * @param tipView        高亮提示控件
+         */
+        void onNext(HightLightView hightLightView, View targetView, View tipView);
     }
 ```
 
@@ -239,7 +255,17 @@ addHighLight包含3个参数：
     protected abstract void drawShape(Bitmap bitmap, HighLight.ViewPosInfo viewPosInfo);
    ```
    BaseLightShape的实现类：RectLightShape（矩形）、CircleLightShape（圆形）、OvalLightShape（椭圆），具体实现请查看代码
-   
+  
+## 更改历史 
+
+1. `A` 2016/9/26 添加点击高亮布局背景是否自动移除标志`autoRemove`
+2. `A` 2016/10/4 给`HighLightView`添加唯一id防止重复添加
+3. `A` 2016/10/5 添加Next模式-按顺序依次显示添加的提示布局
+2. `I` 2016/10/27 扩展高亮形状`LightShape`支持开发者自定义配置
+3. `A` 2016/11/01 为`HighLight`添加接口约束,显示与隐藏监听及`isShowing`属性
+4. `I` 2016/11/02 优化`HightLightView`中提示布局添加与显示
+5. `I` 2016/12/02 显示及移除回调不依赖`intercept`属性
+ 
 ## 致谢
 
 感谢android day day dota1群，苏苏，提供的图片资源。

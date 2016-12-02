@@ -322,13 +322,13 @@ public class HighLight implements HighLightInterface
                     sendClickMessage();
                 }
             });
-            //如果拦截才响应显示回调
-            sendShowMessage();
         }
         //延迟添加提示布局
         hightLightView.addViewForTip();
         mHightLightView = hightLightView;
         mShowing = true;
+        //响应显示回调
+        sendShowMessage();
         return this;
     }
     @Override
@@ -348,10 +348,8 @@ public class HighLight implements HighLightInterface
             graParent.addView(origin, parent.getLayoutParams());
         }
         mHightLightView = null;
-        if (intercept)
-        {   //如果拦截才响应移除回调
-           sendRemoveMessage();
-        }
+
+        sendRemoveMessage();
         mShowing = false;
         return this;
     }

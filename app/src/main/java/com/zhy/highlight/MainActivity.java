@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         mHightLight = new HighLight(MainActivity.this)//
                 .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
 //                .intercept(false)//设置拦截属性为false 高亮布局不影响后面布局的滑动效果
-                .intercept(true)//拦截属性默认为true 使下方callback生效
+                .intercept(true)//拦截属性默认为true 使下方ClickCallback生效
                 .enableNext()//开启next模式并通过show方法显示 然后通过调用next()方法切换到下一个提示布局，直到移除自身
 //                .setClickCallback(new HighLight.OnClickCallback() {
 //                    @Override
@@ -166,14 +166,14 @@ public class MainActivity extends AppCompatActivity
                 })
                 .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
                 .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new OvalLightShape(5,5,20))
-                .setOnRemoveCallback(new HighLightInterface.OnRemoveCallback() {//监听移除回调 intercept为true时生效
+                .setOnRemoveCallback(new HighLightInterface.OnRemoveCallback() {//监听移除回调
                     @Override
                     public void onRemove() {
                         Toast.makeText(MainActivity.this, "The HightLight view has been removed", Toast.LENGTH_SHORT).show();
 
                     }
                 })
-                .setOnShowCallback(new HighLightInterface.OnShowCallback() {//监听显示回调 intercept为true时生效
+                .setOnShowCallback(new HighLightInterface.OnShowCallback() {//监听显示回调
                     @Override
                     public void onShow(HightLightView hightLightView) {
                         Toast.makeText(MainActivity.this, "The HightLight view has been shown", Toast.LENGTH_SHORT).show();
