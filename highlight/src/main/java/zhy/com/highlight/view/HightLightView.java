@@ -150,12 +150,13 @@ public class HightLightView extends FrameLayout
 
     private void buildMask()
     {
-        mMaskBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        // TODO: 2016/12/5 fix OOM
+        mMaskBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(mMaskBitmap);
         canvas.drawColor(maskColor);
         mPaint.setXfermode(MODE_DST_OUT);
         mHighLight.updateInfo();
-        mLightBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        mLightBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_4444);
 
         if(isNext)//如果是next模式添加每个提示布局的背景形状
         {
