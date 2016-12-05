@@ -30,7 +30,7 @@ dependencies {
 或者
 
 ```
-    compile 'com.isanwenyu.highlight:highlight:1.7.0'
+    compile 'com.isanwenyu.highlight:highlight:1.7.1'
 ```
 再或者
 
@@ -38,7 +38,7 @@ dependencies {
 <dependency>
   <groupId>com.isanwenyu.highlight</groupId>
   <artifactId>highlight</artifactId>
-  <version>1.7.0</version>
+  <version>1.7.1</version>
   <type>pom</type>
 </dependency>
 
@@ -256,7 +256,7 @@ addHighLight包含3个参数：
    ```
    BaseLightShape的实现类：RectLightShape（矩形）、CircleLightShape（圆形）、OvalLightShape（椭圆），具体实现请查看代码
   
-## 更改历史 
+## Changelog 更改历史 
 
 1. `A` 2016/9/26 添加点击高亮布局背景是否自动移除标志`autoRemove`
 2. `A` 2016/10/4 给`HighLightView`添加唯一id防止重复添加
@@ -265,11 +265,48 @@ addHighLight包含3个参数：
 5. `A` 2016/11/01 为`HighLight`添加接口约束,显示与隐藏监听及`isShowing`属性
 6. `I` 2016/11/02 优化`HightLightView`中提示布局添加与显示
 7. `I` 2016/12/02 显示及移除回调不依赖`intercept`属性
- 
+
+## Question 问题
+
+1. 添加的提示布局怎么在屏幕中水平居中显示（垂直居中类似）
+	> 提示布局根布局`android:layout_width="match_parent"` `android:gravity="center_horizontal"`
+
+	> 自定义定位参数`rightMargin=0`
+	
+2. 怎么针对同一个高亮控件添加多个提示布局
+
+	> `addHighLight` 多次添加 第一个参数使用同一个控件id即可
+	
+3. 高亮布局显示后 底层布局有变化 怎么更新高亮布局
+	> `mHighLight.getHightLightView().requestLayout()` 掉用后高亮布局会重新布局及绘制
+4. 页面加载完成，自动显示，应该放在哪里调用？
+		
+		```
+	    @Override
+	    public void onWindowFocusChanged(boolean hasFocus) {
+	        super.onWindowFocusChanged(hasFocus);
+	        //界面初始化后显示高亮布局
+	        mHightLight.show();
+	    }
+		```
+5. 如果使用viewpager非第一页高亮布局 有可能定位到屏幕外
+	
+	> 感谢 @liyanxi 提供的方案 会更新到 [README.md](https://github.com/isanwenyu/Highlight/blob/master/README.md)
+
+	```
+    //自定义高亮形状
+    final HighLight.LightShape mLightShape = new BaseLightShape() {
+        @Override
+        protected void resetRectF4Shape(RectF viewPosInfoRectF, float dx, float dy) {
+           //重置viewPosInfoRectF 模掉屏幕宽度 得到真实的left
+            viewPosInfoRectF.offsetTo(viewPosInfoRectF.left % DeviceUtil.getScreenDispaly(getActivity())[0], viewPosInfoRectF.top);
+        }
+      ......
+	```	
+
 ## 致谢
 
 感谢android day day dota1群，苏苏，提供的图片资源。
-	
 	
 
 
