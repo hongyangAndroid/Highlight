@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 10
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 10
         versionName "1.7.1"
     }
@@ -42,5 +42,6 @@ apply from: 'https://raw.githubusercontent.com/isanwenyu/BintrayUploadGradle/mas
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:support-core-ui:24.2.0'
 }

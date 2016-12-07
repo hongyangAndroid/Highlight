@@ -3,6 +3,7 @@ package zhy.com.highlight.util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 
 /**
@@ -45,6 +46,11 @@ public class ViewUtils
                 result.top += tmpRect.top;
             }
             tmp = (View) tmp.getParent();
+
+            //added by isanwenyu@163.com fix bug #21 the wrong rect user will received in ViewPager
+            if(tmp.getParent()!=null &&(tmp.getParent() instanceof ViewPager)){
+                tmp = (View) tmp.getParent();
+            }
         }
         result.right = result.left + child.getMeasuredWidth();
         result.bottom = result.top + child.getMeasuredHeight();
