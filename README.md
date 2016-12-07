@@ -30,7 +30,7 @@ dependencies {
 或者
 
 ```
-    compile 'com.isanwenyu.highlight:highlight:1.7.1'
+    compile 'com.isanwenyu.highlight:highlight:1.7.2'
 ```
 再或者
 
@@ -38,7 +38,7 @@ dependencies {
 <dependency>
   <groupId>com.isanwenyu.highlight</groupId>
   <artifactId>highlight</artifactId>
-  <version>1.7.1</version>
+  <version>1.7.2</version>
   <type>pom</type>
 </dependency>
 
@@ -256,15 +256,21 @@ addHighLight包含3个参数：
    ```
    BaseLightShape的实现类：RectLightShape（矩形）、CircleLightShape（圆形）、OvalLightShape（椭圆），具体实现请查看代码
   
-## Changelog 更改历史 
+## Changelog 更改历史
 
-1. `A` 2016/9/26 添加点击高亮布局背景是否自动移除标志`autoRemove`
-2. `A` 2016/10/4 给`HighLightView`添加唯一id防止重复添加
-3. `A` 2016/10/5 添加Next模式-按顺序依次显示添加的提示布局
-4. `I` 2016/10/27 扩展高亮形状`LightShape`支持开发者自定义配置
-5. `A` 2016/11/01 为`HighLight`添加接口约束,显示与隐藏监听及`isShowing`属性
-6. `I` 2016/11/02 优化`HightLightView`中提示布局添加与显示
-7. `I` 2016/12/02 显示及移除回调不依赖`intercept`属性
+| 操作 | 时间 | 版本  | 详情  |
+| ------|------ |------| ------|
+| `A` | 2016/9/26 | v1.2.0 | 添加点击高亮布局背景是否自动移除标志`autoRemove` |
+| `A` | 2016/10/5 | v1.3.0 | 添加Next模式-按顺序依次显示添加的提示布局<br/>&&给`HighLightView`添加唯一id防止重复添加 |
+| `F` | 2016/10/8 | v1.3.1 | 修复Next模式-HightLightView中校验mPostion问题 |
+| `I` | 2016/10/27 | v1.4.0 | 扩展高亮形状`LightShape`支持开发者自定义配置 |
+| `A` | 2016/11/01 | v1.5.0 | 为`HighLight`添加接口约束|
+| `A` | 2016/11/01 | v1.5.1 | 显示与隐藏监听及`isShowing`属性 |
+| `I` | 2016/11/02 | v1.5.2 | 优化`HightLightView`中提示布局添加与显示 兼容`AutoFrameLayout` |
+| `A` | 2016/11/16 | v1.6.0 | 添加椭圆高亮形状&修复显示问题 |
+| `A` | 2016/11/25 | v1.7.0 | 添加下一个监听 回调返回当前的目标控件及提示控件|
+| `R` | 2016/12/02 | v1.7.1 | 显示及移除回调不依赖`intercept`属性 |
+| `F` | 2016/12/07 | v1.7.2 | 修复#21 在`ViewPager`中用户获取目标布局位置信息错误 |
 
 ## Question 问题
 
@@ -289,8 +295,10 @@ addHighLight包含3个参数：
 	        mHightLight.show();
 	    }
 		```
-5. 如果使用viewpager非第一页高亮布局 有可能定位到屏幕外
+5.  ~~如果使用viewpager非第一页高亮布局 有可能定位到屏幕外~~
 	
+	**v1.7.2版本已修复 具体方案参考#21**  
+
 	> 感谢 @liyanxi 提供的方案 会更新到 [README.md](https://github.com/isanwenyu/Highlight/blob/master/README.md)
 
 	```
@@ -303,7 +311,7 @@ addHighLight包含3个参数：
         }
       ......
 	```	
-
+	
 ## 致谢
 
 感谢android day day dota1群，苏苏，提供的图片资源。
