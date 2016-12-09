@@ -156,6 +156,7 @@ public class HightLightView extends FrameLayout
         canvas.drawColor(maskColor);
         mPaint.setXfermode(MODE_DST_OUT);
         mHighLight.updateInfo();
+
         mLightBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_4444);
 
         if(isNext)//如果是next模式添加每个提示布局的背景形状
@@ -170,6 +171,20 @@ public class HightLightView extends FrameLayout
             }
         }
         canvas.drawBitmap(mLightBitmap,0,0,mPaint);
+        recycleBitmap(mLightBitmap);
+    }
+
+    /**
+     * 主动回收之前创建的bitmap
+     * @param bitmap
+     */
+    private void recycleBitmap(Bitmap bitmap) {
+        if (bitmap != null && !bitmap.isRecycled())
+        {
+            bitmap.recycle();
+            bitmap = null;
+            System.gc();
+        }
     }
 
     /**
@@ -269,6 +284,7 @@ public class HightLightView extends FrameLayout
     {
 
         canvas.drawBitmap(mMaskBitmap, 0, 0, null);
+        recycleBitmap(mMaskBitmap);
         super.onDraw(canvas);
 
     }

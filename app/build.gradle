@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.zhy.highlight"
-        minSdkVersion 10
+        minSdkVersion 11
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -23,4 +23,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':highlight')
     compile 'com.android.support:appcompat-v7:24.2.0'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 }
