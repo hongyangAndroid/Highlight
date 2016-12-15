@@ -45,6 +45,9 @@ dependencies {
 ```
 ## 用法
 
+> 最新用法详情：[https://isanwenyu.github.io/2016/11/23/HighLight-latest-usage/
+](https://isanwenyu.github.io/2016/11/23/HighLight-latest-usage/)
+
 ### Next Mode 下一步模式
 > Enable next mode and invoke show() method then invoke next() method in HighLight to display tip view in order till remove itself
 > 调用`enableNext()`开启next模式并显示，然后调用next()方法显示下一个提示布局 直到删除自己
@@ -271,6 +274,7 @@ addHighLight包含3个参数：
 | `A` | 2016/11/25 | v1.7.0 | 添加下一个监听 回调返回当前的目标控件及提示控件|
 | `R` | 2016/12/02 | v1.7.1 | 显示及移除回调不依赖`intercept`属性 |
 | `F` | 2016/12/07 | v1.7.2 | 修复#21 在`ViewPager`中用户获取目标布局位置信息错误 |
+| `I` | 2016/12/14 | v1.7.3 | `RectLightShape`构造函数添加x-radius和y-radius圆角半径属性 |
 
 ## Question 问题
 
