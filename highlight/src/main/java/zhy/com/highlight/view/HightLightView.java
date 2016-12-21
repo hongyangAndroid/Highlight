@@ -150,13 +150,14 @@ public class HightLightView extends FrameLayout
 
     private void buildMask()
     {
-        // TODO: 2016/12/5 fix OOM
+        recycleBitmap(mMaskBitmap);
         mMaskBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(mMaskBitmap);
         canvas.drawColor(maskColor);
         mPaint.setXfermode(MODE_DST_OUT);
         mHighLight.updateInfo();
 
+        recycleBitmap(mLightBitmap);
         mLightBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_4444);
 
         if(isNext)//如果是next模式添加每个提示布局的背景形状
@@ -171,7 +172,6 @@ public class HightLightView extends FrameLayout
             }
         }
         canvas.drawBitmap(mLightBitmap,0,0,mPaint);
-        recycleBitmap(mLightBitmap);
     }
 
     /**
@@ -283,8 +283,11 @@ public class HightLightView extends FrameLayout
     protected void onDraw(Canvas canvas)
     {
 
-        canvas.drawBitmap(mMaskBitmap, 0, 0, null);
-        recycleBitmap(mMaskBitmap);
+        try {
+            canvas.drawBitmap(mMaskBitmap, 0, 0, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onDraw(canvas);
 
     }
@@ -298,5 +301,13 @@ public class HightLightView extends FrameLayout
      */
     public HighLight.ViewPosInfo getCurentViewPosInfo() {
         return mViewPosInfo;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        //optimize recycle bitmap
+        recycleBitmap(mLightBitmap);
+        recycleBitmap(mMaskBitmap);
     }
 }
