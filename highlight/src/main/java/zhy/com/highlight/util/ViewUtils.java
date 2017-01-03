@@ -48,7 +48,7 @@ public class ViewUtils
             tmp = (View) tmp.getParent();
 
             //added by isanwenyu@163.com fix bug #21 the wrong rect user will received in ViewPager
-            if(tmp.getParent()!=null &&(tmp.getParent() instanceof ViewPager)){
+            if(tmp!=null && tmp.getParent()!=null &&(tmp.getParent() instanceof ViewPager)){
                 tmp = (View) tmp.getParent();
             }
         }
