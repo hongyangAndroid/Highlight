@@ -30,7 +30,7 @@ dependencies {
 或者
 
 ```
-    compile 'com.isanwenyu.highlight:highlight:1.7.4'
+    compile 'com.isanwenyu.highlight:highlight:1.7.5'
 ```
 再或者
 
@@ -38,7 +38,7 @@ dependencies {
 <dependency>
   <groupId>com.isanwenyu.highlight</groupId>
   <artifactId>highlight</artifactId>
-  <version>1.7.4</version>
+  <version>1.7.5</version>
   <type>pom</type>
 </dependency>
 
@@ -276,6 +276,7 @@ addHighLight包含3个参数：
 | `F` | 2016/12/07 | v1.7.2 | 修复#21 在`ViewPager`中用户获取目标布局位置信息错误 |
 | `I` | 2016/12/14 | v1.7.3 | `RectLightShape`构造函数添加x-radius和y-radius圆角半径属性 |
 | `F` | 2016/12/21 | v1.7.4 | 修复`HightLightView`绘制时图片回收异常 |
+| `F` | 2016/1/3   | v1.7.5 | 修复`ViewUtils#getLocationInView`中获取位置空异常 |
 
 ## Question 问题
 
