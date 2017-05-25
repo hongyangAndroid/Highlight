@@ -3,7 +3,7 @@
 
 一个用于app指向性功能高亮的库。
 
-有任何意见，欢迎提issue。thx for `李志云@dota1`的测试、修改、提议。
+有任何意见，欢迎提issue。新建dev分支，欢迎pull request。
 
 ## 效果图
 
@@ -30,7 +30,7 @@ dependencies {
 或者
 
 ```
-    compile 'com.isanwenyu.highlight:highlight:1.7.5'
+    compile 'com.isanwenyu.highlight:highlight:1.8.0'
 ```
 再或者
 
@@ -38,7 +38,7 @@ dependencies {
 <dependency>
   <groupId>com.isanwenyu.highlight</groupId>
   <artifactId>highlight</artifactId>
-  <version>1.7.5</version>
+  <version>1.8.0</version>
   <type>pom</type>
 </dependency>
 
@@ -125,6 +125,7 @@ dependencies {
 ```
 
 #### 2. 调用next()方法依次显示之前添加到提示布局 最后自动移除
+
 ```
 /**
      * 响应所有R.id.iv_known的控件的点击事件
@@ -163,6 +164,43 @@ dependencies {
     }
 ```
 
+#### 4. mAnchor根布局完成回调监听
+> 针对下方问题4的优化方案 在Activity或Fragment onCreated方法中构造HighLight
+> 通过mAnchor.getViewTreeObserver().addOnGlobalLayoutListener(this)实现
+
+```
+    /**
+     * 当界面布局完成显示next模式提示布局
+     * 显示方法必须在onLayouted中调用
+     * 适用于Activity及Fragment中使用
+     * 可以直接在onCreated方法中调用
+     * @author isanwenyu@163.com
+     */
+    public  void showNextTipViewOnCreated(){
+        mHightLight = new HighLight(MainActivity.this)//
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .autoRemove(false)
+                .enableNext()
+                .setOnLayoutCallback(new HighLightInterface.OnLayoutCallback() {
+                    @Override
+                    public void onLayouted() {
+                        //mAnchor界面布局完成添加tipview
+                        mHightLight.addHighLight(R.id.btn_rightLight,R.layout.info_gravity_left_down,new OnLeftPosCallback(45),new RectLightShape())
+                                .addHighLight(R.id.btn_light,R.layout.info_gravity_left_down,new OnRightPosCallback(5),new CircleLightShape())
+                                .addHighLight(R.id.btn_bottomLight,R.layout.info_gravity_left_down,new OnTopPosCallback(),new CircleLightShape());
+                        //然后显示高亮布局
+                        mHightLight.show();
+                    }
+                })
+                .setClickCallback(new HighLight.OnClickCallback() {
+                    @Override
+                    public void onClick() {
+                        Toast.makeText(MainActivity.this, "clicked and show next tip view by yourself", Toast.LENGTH_SHORT).show();
+                        mHightLight.next();
+                    }
+                });
+    }
+    ```
 ### Nomarl Mode 普通模式
 
 对于上面效果图中的一个需要高亮的View，需要通过下面的代码
@@ -276,7 +314,8 @@ addHighLight包含3个参数：
 | `F` | 2016/12/07 | v1.7.2 | 修复#21 在`ViewPager`中用户获取目标布局位置信息错误 |
 | `I` | 2016/12/14 | v1.7.3 | `RectLightShape`构造函数添加x-radius和y-radius圆角半径属性 |
 | `F` | 2016/12/21 | v1.7.4 | 修复`HightLightView`绘制时图片回收异常 |
-| `F` | 2016/1/3   | v1.7.5 | 修复`ViewUtils#getLocationInView`中获取位置空异常 |
+| `F` | 2017/1/3   | v1.7.5 | 修复`ViewUtils#getLocationInView`中获取位置空异常 |
+| `A` | 2017/5/25   | v1.8.0 | 添加`setOnLayoutCallback`回调 支持onCreated中初始化，界面布局完成显示 |
 
 ## Question 问题
 
@@ -300,6 +339,23 @@ addHighLight包含3个参数：
 	        //界面初始化后显示高亮布局
 	        mHightLight.show();
 	    }
+	    
+		或者:
+		
+	  	getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+	            @Override
+	            public void onGlobalLayout() {
+	                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+	                    getWindow().getDecorView().getViewTreeObserver()
+	                            .removeOnGlobalLayoutListener(this);
+	                }
+	                
+		        	//界面初始化后显示高亮布局
+	              	initHightLight();
+	              	mHightLight.show();
+	            }
+	
+	        });	 
 		```
 5.  ~~如果使用viewpager非第一页高亮布局 有可能定位到屏幕外~~
 	
@@ -321,6 +377,6 @@ addHighLight包含3个参数：
 ## 致谢
 
 感谢android day day dota1群，苏苏，提供的图片资源。
-	
-
+thx for `李志云@dota1`的测试、修改、提议。
+thx for [@zj593743143](https://github.com/zj593743143)`的测试和建议
 
