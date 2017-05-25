@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 24
-        versionCode 14
-        versionName "1.7.5"
+        versionCode 15
+        versionName "1.8.0"
     }
     buildTypes {
         release {
@@ -28,7 +28,7 @@ ext {
     libraryDescription = 'One for Android app highlights the directivity function of library'
     siteUrl = 'https://github.com/isanwenyu/Highlight'
     gitUrl = 'https://github.com/isanwenyu/Highlight.git'
-    libraryVersion = '1.7.5'
+    libraryVersion = '1.8.0'
     developerId = 'isanwenyu'
     developerName = 'isanwenyu'
     developerEmail = 'isanwenyu@163.com'

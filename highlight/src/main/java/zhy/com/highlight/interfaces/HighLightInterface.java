@@ -78,4 +78,14 @@ public interface HighLightInterface {
          */
         void onNext(HightLightView hightLightView, View targetView, View tipView);
     }
+
+    /**
+     * mAnchor全局布局监听器
+     */
+    public static interface OnLayoutCallback {
+        /**
+         * 布局结束
+         */
+        void onLayouted();
+    }
 }

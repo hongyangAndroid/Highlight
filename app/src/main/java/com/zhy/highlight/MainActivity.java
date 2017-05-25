@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity
 //                }
 //
 //        );
+        showNextTipViewOnCreated();
 
     }
 
@@ -68,6 +69,37 @@ public class MainActivity extends AppCompatActivity
         mHightLight.show();
     }
 
+    /**
+     * 当界面布局完成显示next模式提示布局
+     * 显示方法必须在onLayouted中调用
+     * 适用于Activity及Fragment中使用
+     * 可以直接在onCreated方法中调用
+     * @author isanwenyu@163.com
+     */
+    public  void showNextTipViewOnCreated(){
+        mHightLight = new HighLight(MainActivity.this)//
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .autoRemove(false)
+                .enableNext()
+                .setOnLayoutCallback(new HighLightInterface.OnLayoutCallback() {
+                    @Override
+                    public void onLayouted() {
+                        //界面布局完成添加tipview
+                        mHightLight.addHighLight(R.id.btn_rightLight,R.layout.info_gravity_left_down,new OnLeftPosCallback(45),new RectLightShape())
+                                .addHighLight(R.id.btn_light,R.layout.info_gravity_left_down,new OnRightPosCallback(5),new CircleLightShape())
+                                .addHighLight(R.id.btn_bottomLight,R.layout.info_gravity_left_down,new OnTopPosCallback(),new CircleLightShape());
+                        //然后显示高亮布局
+                        mHightLight.show();
+                    }
+                })
+                .setClickCallback(new HighLight.OnClickCallback() {
+                    @Override
+                    public void onClick() {
+                        Toast.makeText(MainActivity.this, "clicked and show next tip view by yourself", Toast.LENGTH_SHORT).show();
+                        mHightLight.next();
+                    }
+                });
+    }
     /**
      * 显示next模式提示布局
      * @param view
