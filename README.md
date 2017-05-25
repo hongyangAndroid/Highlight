@@ -376,7 +376,7 @@ addHighLight包含3个参数：
 	
 ## 致谢
 
-感谢android day day dota1群，苏苏，提供的图片资源。
-thx for `李志云@dota1`的测试、修改、提议。
-thx for [@zj593743143](https://github.com/zj593743143)`的测试和建议
+- 感谢android day day dota1群，苏苏，提供的图片资源。
+- thx for `李志云@dota1`的测试、修改、提议。
+- thx for [@zj593743143](https://github.com/zj593743143)`的测试和建议
 
