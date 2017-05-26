@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 10
-        targetSdkVersion 23
-        versionCode 7
-        versionName "1.5.2"
+        targetSdkVersion 24
+        versionCode 15
+        versionName "1.8.0"
     }
     buildTypes {
         release {
@@ -28,7 +28,7 @@ ext {
     libraryDescription = 'One for Android app highlights the directivity function of library'
     siteUrl = 'https://github.com/isanwenyu/Highlight'
     gitUrl = 'https://github.com/isanwenyu/Highlight.git'
-    libraryVersion = '1.5.2'
+    libraryVersion = '1.8.0'
     developerId = 'isanwenyu'
     developerName = 'isanwenyu'
     developerEmail = 'isanwenyu@163.com'
@@ -42,5 +42,6 @@ apply from: 'https://raw.githubusercontent.com/isanwenyu/BintrayUploadGradle/mas
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:support-core-ui:24.2.0'
 }

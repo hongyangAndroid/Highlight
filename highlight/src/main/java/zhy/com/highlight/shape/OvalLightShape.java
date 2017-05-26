@@ -9,19 +9,20 @@ import android.graphics.RectF;
 import zhy.com.highlight.HighLight;
 
 /**
- * Created by caizepeng on 16/8/20.
+ * 椭圆形高亮形状
+ * Created by isanwenyu on 16/11/15.
  * Edited by isanwenyu@163.com 16/10/26.
  */
-public class CircleLightShape extends BaseLightShape {
-    public CircleLightShape() {
+public class OvalLightShape extends BaseLightShape {
+    public OvalLightShape() {
         super();
     }
 
-    public CircleLightShape(float dx, float dy) {
+    public OvalLightShape(float dx, float dy) {
         super(dx, dy);
     }
 
-    public CircleLightShape(float dx, float dy, float blurRadius) {
+    public OvalLightShape(float dx, float dy, float blurRadius) {
         super(dx, dy, blurRadius);
     }
 
@@ -35,12 +36,12 @@ public class CircleLightShape extends BaseLightShape {
             paint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.SOLID));
         }
         RectF rectF = viewPosInfo.rectF;
-        canvas.drawCircle(rectF.left+(rectF.width()/2),rectF.top+(rectF.height()/2),
-                Math.max(rectF.width(),rectF.height())/2,paint);
+        canvas.drawOval(rectF, paint);
     }
 
     @Override
     protected void resetRectF4Shape(RectF viewPosInfoRectF, float dx, float dy) {
-        viewPosInfoRectF.inset(dx,dy);
+        //默认根据dx dy横向和竖向缩小RectF范围
+        viewPosInfoRectF.inset(dx, dy);
     }
 }

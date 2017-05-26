@@ -21,7 +21,9 @@ import zhy.com.highlight.position.OnRightPosCallback;
 import zhy.com.highlight.position.OnTopPosCallback;
 import zhy.com.highlight.shape.BaseLightShape;
 import zhy.com.highlight.shape.CircleLightShape;
+import zhy.com.highlight.shape.OvalLightShape;
 import zhy.com.highlight.shape.RectLightShape;
+import zhy.com.highlight.view.HightLightView;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -46,8 +48,17 @@ public class MainActivity extends AppCompatActivity
 //                }
 //
 //        );
+        showNextTipViewOnCreated();
 
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        //界面初始化后直接显示高亮布局
+//        if(hasFocus) mHightLight.show();
+    }
+
     public  void showTipView(View view){
         mHightLight = new HighLight(MainActivity.this)//
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
@@ -58,6 +69,37 @@ public class MainActivity extends AppCompatActivity
         mHightLight.show();
     }
 
+    /**
+     * 当界面布局完成显示next模式提示布局
+     * 显示方法必须在onLayouted中调用
+     * 适用于Activity及Fragment中使用
+     * 可以直接在onCreated方法中调用
+     * @author isanwenyu@163.com
+     */
+    public  void showNextTipViewOnCreated(){
+        mHightLight = new HighLight(MainActivity.this)//
+                .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
+                .autoRemove(false)
+                .enableNext()
+                .setOnLayoutCallback(new HighLightInterface.OnLayoutCallback() {
+                    @Override
+                    public void onLayouted() {
+                        //界面布局完成添加tipview
+                        mHightLight.addHighLight(R.id.btn_rightLight,R.layout.info_gravity_left_down,new OnLeftPosCallback(45),new RectLightShape())
+                                .addHighLight(R.id.btn_light,R.layout.info_gravity_left_down,new OnRightPosCallback(5),new CircleLightShape())
+                                .addHighLight(R.id.btn_bottomLight,R.layout.info_gravity_left_down,new OnTopPosCallback(),new CircleLightShape());
+                        //然后显示高亮布局
+                        mHightLight.show();
+                    }
+                })
+                .setClickCallback(new HighLight.OnClickCallback() {
+                    @Override
+                    public void onClick() {
+                        Toast.makeText(MainActivity.this, "clicked and show next tip view by yourself", Toast.LENGTH_SHORT).show();
+                        mHightLight.next();
+                    }
+                });
+    }
     /**
      * 显示next模式提示布局
      * @param view
@@ -101,9 +143,9 @@ public class MainActivity extends AppCompatActivity
                 })
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
                 .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
-                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape())
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new CircleLightShape(0,0,0))
                 .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
-                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape());
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new OvalLightShape(5,5,20));
         mHightLight.show();
 
 //        //added by isanwenyu@163.com 设置监听器只有最后一个添加到HightLightView的knownView响应了事件
@@ -129,7 +171,7 @@ public class MainActivity extends AppCompatActivity
         mHightLight = new HighLight(MainActivity.this)//
                 .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
 //                .intercept(false)//设置拦截属性为false 高亮布局不影响后面布局的滑动效果
-                .intercept(true)//拦截属性默认为true 使下方callback生效
+                .intercept(true)//拦截属性默认为true 使下方ClickCallback生效
                 .enableNext()//开启next模式并通过show方法显示 然后通过调用next()方法切换到下一个提示布局，直到移除自身
 //                .setClickCallback(new HighLight.OnClickCallback() {
 //                    @Override
@@ -139,12 +181,12 @@ public class MainActivity extends AppCompatActivity
 //                    }
 //                })
                 .anchor(findViewById(R.id.id_container))//如果是Activity上增加引导层，不需要设置anchor
-                .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape())
-                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new BaseLightShape(5,5) {
+                .addHighLight(R.id.btn_rightLight,R.layout.info_known,new OnLeftPosCallback(45),new RectLightShape(0,0,15,0,0))//矩形去除圆角
+                .addHighLight(R.id.btn_light,R.layout.info_known,new OnRightPosCallback(5),new BaseLightShape(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5,getResources().getDisplayMetrics()), TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5,getResources().getDisplayMetrics()),0) {
                     @Override
                     protected void resetRectF4Shape(RectF viewPosInfoRectF, float dx, float dy) {
                         //缩小高亮控件范围
-                        viewPosInfoRectF.inset(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dx,getResources().getDisplayMetrics()), TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dy,getResources().getDisplayMetrics()));
+                        viewPosInfoRectF.inset(dx,dy);
                     }
 
                     @Override
@@ -154,24 +196,33 @@ public class MainActivity extends AppCompatActivity
                         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                         paint.setDither(true);
                         paint.setAntiAlias(true);
-                        paint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
+                        //blurRadius必须大于0
+                        if(blurRadius>0){
+                            paint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.SOLID));
+                        }
                         RectF rectF = viewPosInfo.rectF;
                         canvas.drawOval(rectF, paint);
                     }
                 })
                 .addHighLight(R.id.btn_bottomLight,R.layout.info_known,new OnTopPosCallback(),new CircleLightShape())
-                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new RectLightShape())
-                .setOnRemoveCallback(new HighLightInterface.OnRemoveCallback() {//监听移除回调 intercept为true时生效
+                .addHighLight(view,R.layout.info_known,new OnBottomPosCallback(10),new OvalLightShape(5,5,20))
+                .setOnRemoveCallback(new HighLightInterface.OnRemoveCallback() {//监听移除回调
                     @Override
                     public void onRemove() {
                         Toast.makeText(MainActivity.this, "The HightLight view has been removed", Toast.LENGTH_SHORT).show();
 
                     }
                 })
-                .setOnShowCallback(new HighLightInterface.OnShowCallback() {//监听显示回调 intercept为true时生效
+                .setOnShowCallback(new HighLightInterface.OnShowCallback() {//监听显示回调
                     @Override
-                    public void onShow() {
+                    public void onShow(HightLightView hightLightView) {
                         Toast.makeText(MainActivity.this, "The HightLight view has been shown", Toast.LENGTH_SHORT).show();
+                    }
+                }).setOnNextCallback(new HighLightInterface.OnNextCallback() {
+                    @Override
+                    public void onNext(HightLightView hightLightView, View targetView, View tipView) {
+                        // targetView 目标按钮 tipView添加的提示布局 可以直接找到'我知道了'按钮添加监听事件等处理
+                        Toast.makeText(MainActivity.this, "The HightLight show next TipView，targetViewID:"+(targetView==null?null:targetView.getId())+",tipViewID:"+(tipView==null?null:tipView.getId()), Toast.LENGTH_SHORT).show();
                     }
                 });
         mHightLight.show();
