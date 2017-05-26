@@ -9,11 +9,11 @@
 
 竖屏：
 
-<img src="high_light_demo.gif" width="320px"/>
+<img src="gif/high_light_demo.gif" width="320px"/>
 
 横屏：
 
-<img src="highlight3.png" width="320px"/>
+<img src="gif/highlight3.png" width="320px"/>
 
 
 ## 引入
@@ -164,9 +164,10 @@ dependencies {
     }
 ```
 
-#### 4. mAnchor根布局完成回调监听
+#### 4. mAnchor根布局完成回调监听(页面加载完成，自动显示)
 > 针对下方问题4的优化方案 在Activity或Fragment onCreated方法中构造HighLight
 > 通过mAnchor.getViewTreeObserver().addOnGlobalLayoutListener(this)实现
+
 
 ```
     /**
@@ -200,7 +201,9 @@ dependencies {
                     }
                 });
     }
-    ```
+    
+```
+
 ### Nomarl Mode 普通模式
 
 对于上面效果图中的一个需要高亮的View，需要通过下面的代码
@@ -296,26 +299,6 @@ addHighLight包含3个参数：
     protected abstract void drawShape(Bitmap bitmap, HighLight.ViewPosInfo viewPosInfo);
    ```
    BaseLightShape的实现类：RectLightShape（矩形）、CircleLightShape（圆形）、OvalLightShape（椭圆），具体实现请查看代码
-  
-## Changelog 更改历史
-
-| 操作 | 时间 | 版本  | 详情  |
-| ------|------ |------| ------|
-| `A` | 2016/9/26 | v1.2.0 | 添加点击高亮布局背景是否自动移除标志`autoRemove` |
-| `A` | 2016/10/5 | v1.3.0 | 添加Next模式-按顺序依次显示添加的提示布局<br/>&&给`HighLightView`添加唯一id防止重复添加 |
-| `F` | 2016/10/8 | v1.3.1 | 修复Next模式-HightLightView中校验mPostion问题 |
-| `I` | 2016/10/27 | v1.4.0 | 扩展高亮形状`LightShape`支持开发者自定义配置 |
-| `A` | 2016/11/01 | v1.5.0 | 为`HighLight`添加接口约束|
-| `A` | 2016/11/01 | v1.5.1 | 显示与隐藏监听及`isShowing`属性 |
-| `I` | 2016/11/02 | v1.5.2 | 优化`HightLightView`中提示布局添加与显示 兼容`AutoFrameLayout` |
-| `A` | 2016/11/16 | v1.6.0 | 添加椭圆高亮形状&修复显示问题 |
-| `A` | 2016/11/25 | v1.7.0 | 添加下一个监听 回调返回当前的目标控件及提示控件|
-| `R` | 2016/12/02 | v1.7.1 | 显示及移除回调不依赖`intercept`属性 |
-| `F` | 2016/12/07 | v1.7.2 | 修复#21 在`ViewPager`中用户获取目标布局位置信息错误 |
-| `I` | 2016/12/14 | v1.7.3 | `RectLightShape`构造函数添加x-radius和y-radius圆角半径属性 |
-| `F` | 2016/12/21 | v1.7.4 | 修复`HightLightView`绘制时图片回收异常 |
-| `F` | 2017/1/3   | v1.7.5 | 修复`ViewUtils#getLocationInView`中获取位置空异常 |
-| `A` | 2017/5/25   | v1.8.0 | 添加`setOnLayoutCallback`回调 支持onCreated中初始化，界面布局完成显示 |
 
 ## Question 问题
 
@@ -330,9 +313,11 @@ addHighLight包含3个参数：
 	
 3. 高亮布局显示后 底层布局有变化 怎么更新高亮布局
 	> `mHighLight.getHightLightView().requestLayout()` 掉用后高亮布局会重新布局及绘制
-4. 页面加载完成，自动显示，应该放在哪里调用？
+4. ~~页面加载完成，自动显示，应该放在哪里调用？~~
 		
-		```
+	**v1.8.0及以后版本建议使用`setOnLayoutCallback`方式 老版本使用下面方案** 
+		
+	```
 	    @Override
 	    public void onWindowFocusChanged(boolean hasFocus) {
 	        super.onWindowFocusChanged(hasFocus);
@@ -356,7 +341,8 @@ addHighLight包含3个参数：
 	            }
 	
 	        });	 
-		```
+	```
+		
 5.  ~~如果使用viewpager非第一页高亮布局 有可能定位到屏幕外~~
 	
 	**v1.7.2版本已修复 具体方案参考#21**  
@@ -373,10 +359,14 @@ addHighLight包含3个参数：
         }
       ......
 	```	
-	
+
+## Changelog 更改历史
+
+See details in [CHANGELOG.md](CHANGELOG.md) file.
+
 ## 致谢
 
 - 感谢android day day dota1群，苏苏，提供的图片资源。
 - thx for `李志云@dota1`的测试、修改、提议。
-- thx for [@zj593743143](https://github.com/zj593743143)`的测试和建议
+- thx for [@zj593743143](https://github.com/zj593743143)的测试和建议
 
