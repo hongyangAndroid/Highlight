@@ -1,0 +1,12 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/HighLight.iml" filepath="$PROJECT_DIR$/HighLight.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Highlight-wdeo3601.iml" filepath="$PROJECT_DIR$/.idea/modules/Highlight-wdeo3601.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Highlight-wdeo3601.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Highlight-wdeo3601.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/highlight/Highlight-wdeo3601.highlight.iml" filepath="$PROJECT_DIR$/.idea/modules/highlight/Highlight-wdeo3601.highlight.iml" />
+    </modules>
+  </component>
+</project>

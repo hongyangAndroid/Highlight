@@ -3,8 +3,9 @@ package zhy.com.highlight.util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Created by zhy on 15/10/8.

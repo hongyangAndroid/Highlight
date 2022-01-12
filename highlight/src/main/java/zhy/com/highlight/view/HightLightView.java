@@ -119,9 +119,8 @@ public class HightLightView extends FrameLayout
         View view = mInflater.inflate(viewPosInfo.layoutId, this, false);
         //设置id为layout id 供HighLight查找
         view.setId(viewPosInfo.layoutId);
-        LayoutParams lp = buildTipLayoutParams(view, viewPosInfo);
 
-        if (lp == null) return;
+        LayoutParams lp = (LayoutParams) view.getLayoutParams();
 
         lp.leftMargin = (int) viewPosInfo.marginInfo.leftMargin;
         lp.topMargin = (int) viewPosInfo.marginInfo.topMargin;

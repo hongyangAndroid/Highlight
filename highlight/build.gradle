@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 30
 
     defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 24
+        minSdkVersion 21
+        targetSdkVersion 30
         versionCode 15
         versionName "1.8.0"
     }
@@ -37,11 +36,11 @@ ext {
     allLicenses = ["Apache-2.0"]
 }
 
-apply from: 'https://raw.githubusercontent.com/isanwenyu/BintrayUploadGradle/master/bintray_upload.gradle'
+//apply from: 'https://raw.githubusercontent.com/isanwenyu/BintrayUploadGradle/master/bintray_upload.gradle'
 
 
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-core-ui:24.2.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:support-core-ui:24.2.0'
 }
