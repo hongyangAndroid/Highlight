@@ -1,10 +1,6 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel>
-      <module name="Highlight-wdeo3601.app" target="11" />
-      <module name="Highlight-wdeo3601.highlight" target="11" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>
